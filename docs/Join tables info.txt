@@ -1,31 +1,38 @@
-title.akas.tsv.gz:
+df_title_akas - nic
 
-
-title.basics.tsv.gz:
+df_title_basic:
 - tconst
 - titleType
 - original Title
 - isAdult
 - genres
 
-title.crew.tsv.gz - nic
+df_title_crew - nic
 
-title.episode.tsv.gz - nic
+df_title_episode - nic
 
-title.principals.tsv.gz:
+df_title_principals:
 - tconst
-- ordering
 - nconst
 - category
-- job
 - characters
 
-title.ratings.tsv.gz - nic
+df_title_ratings - nic
 
-name.basics.tsv.gz:
+df_name_basics:
 - nconst
 - primaryName
 - birthYear
 - deathYear
-- primaryProfession
 - knownForTitles
+
+Pomysły na dodanie innych danych:
+- nagrody dla aktorów
+- ocena aktorów
+- kraj pochodzenia aktora
+
+------------------------------------------------------
+
+Złączenie danych:
+df_name_basics left join df_title_principals on nconst
+df_title_principals left join df_title_basic on tconst

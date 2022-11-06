@@ -1,0 +1,14 @@
+df_name_basics:
+- birthYear
+- deathYear
+- knownForTitles
+
+df_title_principals:
+- category
+- characters
+
+df_title_basic:
+- titleType
+- original Title (?)
+- isAdult
+- genres
