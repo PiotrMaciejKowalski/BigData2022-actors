@@ -1,0 +1,31 @@
+title.akas.tsv.gz:
+
+
+title.basics.tsv.gz:
+- tconst
+- titleType
+- original Title
+- isAdult
+- genres
+
+title.crew.tsv.gz - nic
+
+title.episode.tsv.gz - nic
+
+title.principals.tsv.gz:
+- tconst
+- ordering
+- nconst
+- category
+- job
+- characters
+
+title.ratings.tsv.gz - nic
+
+name.basics.tsv.gz:
+- nconst
+- primaryName
+- birthYear
+- deathYear
+- primaryProfession
+- knownForTitles
