@@ -1,0 +1,1 @@
+W tym katalogu zbieramy tutoriale i poradniki dotyczące naszego projektu oraz dokumentację dotyczącą pomocnych rzeczy, np. zasad pracy z bibliotekami.

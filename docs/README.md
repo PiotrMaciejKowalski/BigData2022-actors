@@ -1,0 +1,1 @@
+Tu gromadzimy dokumentację projektu. O ile trzymamy ją w offline.
