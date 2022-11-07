@@ -1,4 +1,4 @@
-df_title_akas - nic
+df_title_akas - None
 
 df_title_basic:
 - tconst
@@ -7,9 +7,9 @@ df_title_basic:
 - isAdult
 - genres
 
-df_title_crew - nic
+df_title_crew - None
 
-df_title_episode - nic
+df_title_episode - None
 
 df_title_principals:
 - tconst
@@ -17,7 +17,7 @@ df_title_principals:
 - category
 - characters
 
-df_title_ratings - nic
+df_title_ratings - None
 
 df_name_basics:
 - nconst
@@ -25,11 +25,6 @@ df_name_basics:
 - birthYear
 - deathYear
 - knownForTitles
-
-Pomysły na dodanie innych danych:
-- nagrody dla aktorów
-- ocena aktorów
-- kraj pochodzenia aktora
 
 ------------------------------------------------------
 
