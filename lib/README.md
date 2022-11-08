@@ -1,1 +1,1 @@
-TODO: przesunąć do folderu tutorials, gdy pojawi się faktyczny element folderu lib
+Folder ten przechowuje użyteczne pliki i komponenty, które nie są ściśle powiązane z projektem.
