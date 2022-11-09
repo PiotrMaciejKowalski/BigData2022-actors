@@ -3,7 +3,7 @@ df_title_akas - None
 df_title_basic:
 - tconst
 - titleType
-- original Title
+- originalTitle
 - isAdult
 - genres
 
