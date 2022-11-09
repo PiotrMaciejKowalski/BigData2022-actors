@@ -1,0 +1,1 @@
+W tym folderze przechowujemy notatniki z rezultatami naszej pracy itp.

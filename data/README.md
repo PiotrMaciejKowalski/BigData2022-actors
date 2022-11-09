@@ -1,0 +1,1 @@
+Tu gromadzimy nasze zbiory danych.
