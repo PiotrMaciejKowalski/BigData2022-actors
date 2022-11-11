@@ -68,7 +68,21 @@ Kolejnym zadaniem na GitHubie jest zapisanie dokonanych zmian, gdyż zmiany nie 
 ![](images/terminal6.jpg)
 
     2.3 Aby wprowadzić zmiany w danym pliku, należy:
-* Otworzyć terminal w lokalizacji, gdzie umieściliśmy lokalne repozytorium (pokazane powyżej),
-* Wpisać komendę `git checkout nazwa_brancha_na_którym_chcemy_wprowadzić_zmiany` i kliknąć Enter. Widzimy, że zmienia się wówczas lokalizacja, wktórej się znajdujemy:
+* Otwórz terminal w lokalizacji, gdzie umieściłeś lokalne repozytorium (pokazane powyżej),
+* Wpisz komendę `git checkout nazwa_brancha_na_którym_chcemy_wprowadzić_zmiany` i kliknij Enter. Widzimy, że zmienia się wówczas lokalizacja, wktórej się znajdujemy:
 ![](images/terminal7.jpg)
-* Wstawiamy plik, któy chcemy dołączyć, w odpowiedniej lokalizacji lub zmieniamy istniejący plik
+* Wstaw plik, któy chcesz dołączyć, w odpowiedniej lokalizacji lub zmienić istniejący plik (ja dodałam plik "Jak korzystać z GitHub.md" do folderu tutorials),
+![](images/terminal8.jpg)
+* W terminalu wpisz komendę `git add nazwa_pliku_na_którym_chcemy_wprowadzić_zmiany` lub jeśli chcesz wprowadzić wszystkie wprowadzone zmiany w ramach twojego branch wpisz komendę `git add .` i kliknij Enter,
+* ![](images/terminal9.jpg)
+* Wpisz komendę `git commit -m "króki_tekst_opisujący_zapisywane_zmiany"` i kliknij Enter,
+![](images/terminal10.jpg)
+* Wpisz komendę `git push` i kliknij Enter,
+![](images/terminal11.jpg)
+* W celu sprawdzenia, czy coś jeszcze nie zostało zapisane na repozytorium, możemy wykonać komendę `git status`, która pokaże, które pliki czekają jeszcze na commit (u mnie widać dodane nowe 3 pliki).
+![](images/terminal12.jpg)
+
+3. Zapisanie zmian przez Visual Studio Code:
+
+* 
+
