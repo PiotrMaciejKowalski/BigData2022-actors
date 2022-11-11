@@ -153,9 +153,12 @@ Jak założyć pull request, kiedy skończyliśmy pracę nad danym zadaniem? Tu 
 * Wybierz, z jakiego brancha do jakiego ma być merge (zazwyczaj będziemy merge'ować do main),
 
     ![](images/pull_request3.jpg)
-* Kliknij "Create pull request".
+* Kliknij "Create pull request",
 
     ![](images/pull_request4.jpg)
+* Dodaj komentarz jeśli chcesz i kliknij "Create pull request",
+
+    ![](images/pull_request6.jpg)
 * Przypisz osobę, która ma zrobić review w polu "Assignees".
 
     ![](images/pull_request7.jpg)
