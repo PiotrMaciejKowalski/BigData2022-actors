@@ -84,5 +84,18 @@ Kolejnym zadaniem na GitHubie jest zapisanie dokonanych zmian, gdyż zmiany nie 
 
 3. Zapisanie zmian przez Visual Studio Code:
 
-* 
+* Sklonuj repozytorium lokalnie tak, jak zostalo to pokazane w punkcie 2.1,
+* Jeśli masz już sklonowane repozytorium, przed wprowadzeniem zmian wykonaj `git pull` tak, jak zostało to pokazane w punkcie 2.2,
+* Przejdź do swojego brancha za pomocą komendy `git checkout` tak, jak zostało to pokazane w punkcie 2.3,
+* Otwórz swój plik w Visual Studio Code,
+* Zapisz plik w odpowiednim folderze na repozytorium lokalnym,
+![](images/visual1.jpg)
+* Wejdź w zakładkę "Source Control"
+![](images/visual2.jpg)
+* Dodaj pliki, w których chciałbyś zapisać zmiany,
+![](images/visual3.jpg)
+* Dodaj komentarz opisujący zmiany, które chcesz zapisać,
+![](images/visual4.jpg)
+* Kliknij "Commit & Push", aby zapisać zmiany na repozytorium.
+![](images/visual5.jpg)
 
