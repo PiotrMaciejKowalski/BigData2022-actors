@@ -99,3 +99,29 @@ Kolejnym zadaniem na GitHubie jest zapisanie dokonanych zmian, gdyż zmiany nie 
 * Kliknij "Commit & Push", aby zapisać zmiany na repozytorium.
 ![](images/visual5.jpg)
 
+Jeśli wszystkie zmiany dotyczące danego zadania zostały już zapisane na repozytorium, wówczas możemy stworzyć ***pull request***, czyli prośbę o ***merge*** wszystkich zmian z naszego brancha do main. Zanim taki request zostanie zatwierdzony, dodany/zmieniony kod musi przejść ***review***, podczas którego reviewer może mieć pewne sugestie do kodu, komunikując je przez komentarze.
+
+Jak założyć pull request, kiedy skończyliśmy pracę nad danym zadaniem? Tu mamy dwie opcje:
+
+1. Zakładanie pull requesta przez pojawiający się przycisk "Compare & pull request":
+
+* Kliknij przycisk "Compare & pull request" (pojawia się on po zidentyfikowaniu zmian nie wprowadzonych na main),
+![](images/pull_request5.jpg)
+* Dodaj komentarz jeśli chcesz i kliknij "Create pull request",
+![](images/pull_request6.jpg)
+* Przypisz osobę, która ma zrobić review w polu "Assignees".
+![](images/pull_request7.jpg)
+
+2. Zakładanie pull requesta przez zakładkę "Pull requests":
+
+* Wejdź w zakładkę "Pull requests",
+![](images/pull_request1.jpg)
+* Kliknij "New pull request",
+![](images/pull_request2.jpg)
+* Wybierz z jakiego brancha do jakiego ma być merge (zazwyczaj będziemy merge'ować do main),
+![](images/pull_request3.jpg)
+* Kliknij "Create pull request".
+![](images/pull_request4.jpg)
+* Przypisz osobę, która ma zrobić review w polu "Assignees".
+![](images/pull_request7.jpg)
+
