@@ -1,4 +1,4 @@
-# Dokument ma na celu wytłumaczenie w jaki sposób korzystać z GitHuba.
+Dokument ma na celu wytłumaczenie w jaki sposób korzystać z GitHuba.
 
 ## Co to jest GitHub?
 
@@ -63,9 +63,9 @@ Kolejnym zadaniem na GitHubie jest zapisanie dokonanych zmian, gdyż zmiany nie 
 
 2. Zapisywanie zmian przez terminal:
 
-    2.1. Aby móc wprowadzać zmiany przez terminal, najpierw musimy mieć lokalnie skopiowane repozytorium (robimy to tylko raz),
-* Utwórz plik, w którym chcesz mieć lokalnie skopiowane repozytorium (u mnie Big Data2),
-* Kliknij prawym przyciskiem myszy, a następnie "Git Bash Here" (do tego musisz mieć zainstalowanego Git Basha),
+    2.1. Aby móc wprowadzać zmiany przez terminal, najpierw musimy mieć lokalnie skopiowane (sklonowane) repozytorium (robimy to tylko raz),
+* Utwórz pusty katalog, w którym chcesz mieć lokalnie skopiowane repozytorium (u mnie Big Data2),
+* Kliknij prawym przyciskiem myszy, a następnie "Git Bash Here" (do tego musisz mieć zainstalowanego Git Basha - [Git Bash download](https://gitforwindows.org/)),
 
     ![](images/terminal1.jpg)
 * Poczekaj, aż terminal będzie gotowy do działania (pojawi się znaczek dolara),
@@ -79,7 +79,7 @@ Kolejnym zadaniem na GitHubie jest zapisanie dokonanych zmian, gdyż zmiany nie 
 * W lokalizacji, gdzie masz lokalne repozytorium, kliknij prawym przyciskiem myszy, a następnie "Git Bash Here", aby otworzyć terminal Git Bash,
 
     ![](images/terminal5.jpg)
-* Wpisz komendę `git pull`, aby ściągnąc aktualną wersję repozytorium i kliknij Enter.
+* Wpisz komendę `git pull`, aby ściągnąc aktualną wersję danego brancha i kliknij Enter (jeśli chcesz zaktualizować całe repozytorium lokalnie użyj komendy `git fetch`.
 
     ![](images/terminal6.jpg)
 
@@ -91,16 +91,19 @@ Kolejnym zadaniem na GitHubie jest zapisanie dokonanych zmian, gdyż zmiany nie 
 * Wstaw plik, który chcesz dołączyć, w odpowiedniej lokalizacji lub zmienić istniejący plik (ja dodałam plik "Jak korzystać z GitHub.md" do folderu tutorials),
 
     ![](images/terminal8.jpg)
-* W terminalu wpisz komendę `git add <nazwa_pliku_na_którym_chcemy_wprowadzić_zmiany>` lub jeśli chcesz wprowadzić wszystkie wprowadzone zmiany w ramach twojego brancha, wpisz komendę `git add *` i kliknij Enter,
+* W terminalu wpisz komendę `git add <nazwa_pliku_na_którym_chcemy_wprowadzić_zmiany>` (jeśli w nazwie pliku są spacje, umieść ją w cudzysłowie) i kliknij Enter,
 
     ![](images/terminal9.jpg)
+* Wpisz komendę `git status`, aby sprawdzić co będzie zmienione w ramach commita i kliknij Enter,
+
+    ![](images/terminal13.jpg)
 * Wpisz komendę `git commit -m "<króki_tekst_opisujący_zapisywane_zmiany>"` i kliknij Enter,
 
     ![](images/terminal10.jpg)
 * Wpisz komendę `git push` i kliknij Enter,
 
     ![](images/terminal11.jpg)
-* W celu sprawdzenia, czy coś jeszcze nie zostało zapisane na repozytorium zdalnym, możemy wykonać komendę `git status`, która pokaże, które pliki czekają jeszcze na commit (u mnie widać dodane nowe 3 pliki).
+* W celu sprawdzenia, czy pewne zmiany jeszcze nie zostało zapisane na repozytorium zdalnym, możemy wykonać komendę `git status`, która pokaże, które pliki czekają jeszcze na commit (u mnie widać dodane nowe 3 pliki).
 
     ![](images/terminal12.jpg)
 
@@ -109,7 +112,7 @@ Kolejnym zadaniem na GitHubie jest zapisanie dokonanych zmian, gdyż zmiany nie 
 * Sklonuj repozytorium lokalnie tak, jak zostało to pokazane w punkcie 2.1.,
 * Jeśli masz już sklonowane repozytorium, przed wprowadzeniem zmian wykonaj `git pull` tak, jak zostało to pokazane w punkcie 2.2.,
 * Przejdź do swojego brancha za pomocą komendy `git checkout` tak, jak zostało to pokazane w punkcie 2.3.,
-* Otwórz swój plik w Visual Studio Code,
+* Otwórz główny katalog projektu w Visual Studio Code,
 * Zapisz plik w odpowiednim folderze na repozytorium lokalnym,
 
     ![](images/visual1.jpg)
@@ -175,7 +178,7 @@ Jak założyć pull request, kiedy skończyliśmy pracę nad danym zadaniem? Tu 
 | git commit -m "Commit message" | Dodanie zmian plików będących w stage'u do lokalnego repozytorium |
 | git commit -a | Dodanie zmian wszystkich zmienionych plików do lokalnego repozytorium |
 | git push | Dodanie zmian do brancha do zdalnego repozytorium |
-| git checkout -b <branch_name> | Utworzenie nowego brancha na lokalnym repozytorium i przełączenie się na niego |
+| git checkout -b <branch_name> | Utworzenie nowego brancha na bazie bieżącego na lokalnym repozytorium i przełączenie się na niego |
 | git checkout <branch_name> | Przełączenie się na dany branch |
 | git branch | Wylistowanie wszystkich branchy w danym repozytorium i wyświetlenie, w którym branchu aktualnie jesteśmy |
 | git branch -d <branch_name> | Usunięcie brancha na lokalnym repozytorium |
@@ -190,4 +193,18 @@ Jak założyć pull request, kiedy skończyliśmy pracę nad danym zadaniem? Tu 
 | git checkout -- <file_name> | Cofnięcie nie zacommitowanych zmian w danym pliku |
 
 Dokumentację wszystkich gitowych komend można znaleźć pod poniższym linkiem:
-https://git-scm.com/docs
+[dokumentacja git](https://git-scm.com/docs)
+    
+## Kilka złotych zasad korzystania z GitHub:
+    
+1. Do każdego zadania powinien być utworzony nowy branch.
+2. Komentarze do commita powinny opisywać wprowadzone zmiany.
+3. Pull request powinien być założony dla ukończonego całego zadania lub podzadania, nie dla części.
+4. Po założonym pull requestcie przypisujemy reviewera w sekcji Assignees na GitHubie (opisano wyżej), nie przypisujemy reiewera na click upie.
+5. Po wprowadzonych zmianach po review, warto odpowiedzieć na komentarze reviewera (np. "zrobione", "zmienione", "dodane").
+6. Dyskusję w komentarzach pull requestu zamyka zawsze osoba otwierająca dyskusję (opcja "Resolve conversation").
+7. Sekcja Assignees dla danego pull requestu powinna wskazywać osobę, od której wymagane jest aktualnie działanie (np. jeśli reviewer zakończył robić review, powinien przypisać autora kodu, aby wiedział, że pull request jest po jego stronie. Autor po zaadresowaniu komentarzy, powinien ponownie przypisać reviewera, aby ten sprawdził poprawione fragmenty kodu).
+8. Nigdy nie używamy opcji "Close pull request", zamykającej dany pull request.
+9. Merge branchy zawsze robi team lead.
+10. Konflikty związane z merge'owaniem branchy rozwiązuje team lead.
+11. Nigdy nie merge'ujemy bez uzyskania approve.
