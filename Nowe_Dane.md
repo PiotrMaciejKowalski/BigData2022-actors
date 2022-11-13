@@ -24,6 +24,6 @@ Zbiór danych pod poniższym linkiem zawiera o nominowanych oraz zdobywców Emmy
 
 
 ## TMDB 5000
-Zbiór danych po poniższym linkeim zawiera informację z bazy TMDB.
+Zbiór danych pod poniższym linkeim zawiera informację z bazy TMDB.
 
 [TMDB](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata?select=tmdb_5000_movies.csv)
