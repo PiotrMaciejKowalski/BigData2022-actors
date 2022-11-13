@@ -204,7 +204,7 @@ Dokumentację wszystkich gitowych komend można znaleźć pod poniższym linkiem
 5. Po wprowadzonych zmianach po review, warto odpowiedzieć na komentarze reviewera (np. "zrobione", "zmienione", "dodane").
 6. Dyskusję w komentarzach pull requestu zamyka zawsze osoba otwierająca dyskusję (opcja "Resolve conversation").
 7. Sekcja Assignees dla danego pull requestu powinna wskazywać osobę, od której wymagane jest aktualnie działanie (np. jeśli reviewer zakończył robić review, powinien przypisać autora kodu, aby wiedział, że pull request jest po jego stronie. Autor po zaadresowaniu komentarzy, powinien ponownie przypisać reviewera, aby ten sprawdził poprawione fragmenty kodu).
-8. Nigdy nie używamy opcji "Close pull request", zamykającej dany pull request.
-9. Merge branchy zawsze robi team lead.
-10. Konflikty związane z merge'owaniem branchy rozwiązuje team lead.
+8. Nie używamy opcji "Close pull request", zamykającej dany pull request. Oznacza ona rezygnację z chęci zakończenia zadania lub, że problem został rozwiązany gdzie indziej.
+9. Zespoły przyjmują stałą zasadę co do tego, kto odpowiada za merge danego pull requesta. Np. obecnie wykonuje to dr Kowalski, ale docelowo chcemy aby nasz lider to robił.
+10. Konflikty związane z merge'owaniem branchy rozwiązuje osoba merge'ująca branche.
 11. Nigdy nie merge'ujemy bez uzyskania approve.
