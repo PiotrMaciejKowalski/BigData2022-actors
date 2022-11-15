@@ -1,16 +1,16 @@
 Dokument ma na celu wytłumaczenie w jaki sposób korzystać z GitHuba.
 
-## Co to jest GitHub?
+# Co to jest GitHub?
 
 GitHub to serwis pozwalający na przechowywanie projektów przy pełnej kontroli wersji każdego pliku. Przechowywane są na nim kody źródłowe plików, a wszystkie wprowadzone zmiany są zaznaczane w tym kodzie jako usunięcia lub dodania linii, a dodatkowo powinny być również opisane komentarzem autora zmian. Dzięki temu mamy pełną przejrzystość wprowadzanych zmian oraz w każdej chwili możemy wrócić do poprzedniej wersji pliku. Na jednym repozytorium może działać kilka osób, jednocześnie wprowadzając zmiany.
 
-## Struktura projektu na GitHubie
+# Struktura projektu na GitHubie
 
 Dla każdego projektu na GitHubie zakładane jest osobne ***repozytorium***, czyli katalog, w którym przechowywane są wszystkie wersjonowane pliki. W repozytorium możemy tworzyć ***foldery***, które pomogą uporządkować ***pliki*** tworzące nasz projekt. To właśnie dla każdego z tych plików będzie zapisana historia wersji z widocznymi zmianami.
 
 Ponieważ na jednym repozytorium może pracować cały zespół, oznacza to, że ciężko byłoby pracować na pliku zawierającym kod, który cały czas się zmienia. Dlatego GitHub umożliwia pracę na wielu ***branchach***, czyli gałęziach projektu. Głównym branchem każdego projektu jest ***main***. To tam trafia zatwierdzony kod, który jest już częścią głównego projektu. Otwierając nowy branch, zaczynamy pracować "obok" głównej gałęzi, zmieniając pliki, nad którymi pracujemy, a po skończonej pracy i zatwierdzonym review, nasze zmiany są ***merge'owane*** do brancha main.
 
-## Jak rozpocząć pracę z GitHubem?
+# Jak rozpocząć pracę z GitHubem?
 
 Na początku każdego nowego zadania, którego wykonania się podjęliśmy, musim otworzyć nowy branch. Możemy to zrobić na dwa sposoby:
 
@@ -166,7 +166,7 @@ Jak założyć pull request, kiedy skończyliśmy pracę nad danym zadaniem? Tu 
 
     ![](images/pull_request7.jpg)
 
-## Przydatne komendy gitowe
+# Przydatne komendy gitowe
 
 | Komenda | Efekt|
 | ----- | ----- |
@@ -195,7 +195,7 @@ Jak założyć pull request, kiedy skończyliśmy pracę nad danym zadaniem? Tu 
 Dokumentację wszystkich gitowych komend można znaleźć pod poniższym linkiem:
 [dokumentacja git](https://git-scm.com/docs)
     
-## Kilka złotych zasad korzystania z GitHub:
+# Kilka złotych zasad korzystania z GitHub:
     
 1. Do każdego zadania powinien być utworzony nowy branch.
 2. Komentarze do commita powinny opisywać wprowadzone zmiany.
