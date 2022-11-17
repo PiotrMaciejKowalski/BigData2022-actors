@@ -7,7 +7,7 @@ Dzięki wykorzystniu wszystkich zbiorów danych z nagrodami możemy uzyskać pe�
 
 
 ## Oscary
-Zbiór danych pod poniższym linkiem zawiera o nominowanych oraz zdobywców Oscarów w latach 1927-2018. Dane zawierają wszystkie kategorie w związku z czym informacje o aktorach, to tylko ich wycinek. Każda nominacja jest powiązana z rokiem powstania filmu, rokiem ceremonii, filmem oraz informacją czy była zwycięska.
+Zbiór danych pod poniższym linkiem zawiera o nominowanych oraz zdobywców Oscarów w latach 1927-2018. Dane zawierają wszystkie kategorie w związku z czym informacje o aktorach, które nas interesują, to tylko ich wycinek. Każda nominacja aktora jest powiązana z rokiem powstania filmu, rokiem ceremonii, filmem oraz informacją czy była zwycięska.
 
 [Oscary](https://www.kaggle.com/datasets/unanimad/the-oscar-award)
 
