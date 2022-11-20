@@ -37,3 +37,18 @@ Na kagglu jest informacja, że dane pochodzą z oficnalnej strony. W związku z 
 Zbiór danych pod poniższym linkeim zawiera informację z bazy TMDB. Znajdziemy tu informacje o aktorach i osobach pracujących przy produkcji filmów oraz budżetach, gatunkach, popularności, wytwórniach filmowych, oryginalnyh językach i tytułach.
 
 [TMDB](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata?select=tmdb_5000_movies.csv)
+
+Podaję również link do analizy TMDB zrobionej przez kogoś.
+
+[TMDB Analiza](https://github.com/YashMotwani/TMDB-Movies-Dataset-Investigation-)
+
+Bardziej aktualne dane można przygotować korzystając z poniższego źródła. Jednak jest to trochę bardziej złożone zadanie i w mojej ocenie warto rozważyć przydatność tych danych na już przygotowanym zbiorze.
+
+[TMDB Źródło](https://developers.themoviedb.org/3/getting-started/introduction)
+
+Jak dane zostały przygotowane możemy dowiedzieć się tutaj.
+
+[TMDB Przygotowanie Danych](https://gist.github.com/SohierDane/4a84cb96d220fc4791f52562be37968b)
+
+
+
