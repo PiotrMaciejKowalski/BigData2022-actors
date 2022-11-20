@@ -50,5 +50,12 @@ Jak dane zostały przygotowane możemy dowiedzieć się tutaj.
 
 [TMDB Przygotowanie Danych](https://gist.github.com/SohierDane/4a84cb96d220fc4791f52562be37968b)
 
+## Rotten Tomatoes
 
+Rotten Tomatoes to serwis któy od początku wydał mi się bardzo interesujący. Możemy tam znaleźć oceny aktorów wystawione przez widownię oraz krytyków za poszczególne filmy. Poniżej przykład.
 
+[Tom Hanks](https://www.rottentomatoes.com/celebrity/tom_hanks)
+
+Niestety nie znalazłem możliwości pobrania tych danych. Możliwe, że jednak damy radę je przygotować w jakiś sposób sami?
+
+[Web Scraping Rotten Tomatoes](https://www.analyticsvidhya.com/blog/2022/05/a-guide-to-web-scraping-rotten-tomatoes/)
