@@ -59,3 +59,21 @@ Rotten Tomatoes to serwis któy od początku wydał mi się bardzo interesujący
 Niestety nie znalazłem możliwości pobrania tych danych. Możliwe, że jednak damy radę je przygotować w jakiś sposób sami?
 
 [Web Scraping Rotten Tomatoes](https://www.analyticsvidhya.com/blog/2022/05/a-guide-to-web-scraping-rotten-tomatoes/)
+
+## TVDB
+
+TVDB to baza która może bardzo nam pomóc rozszerzyć informacje o aktorach. Możemy tam się dowiedzieć o ich rasie(sic!), miejscu i dacie urodzeniach oraz nominacjach do nagród.
+
+[Bowen Yang](https://thetvdb.com/people/8116811-bowen-yang)
+
+Niestety wygląda na to, że dostęp do tych danych jest płatny ale może komuś uda się jakoś je wydobyć?
+
+[API](https://thetvdb.com/api-information)
+
+## Wikipedia
+
+Miejscem gdzie na pewno znajdziemy bardzo wiele przydatnych informacji o aktorach jest Wikipedia. W mojej ocenie nadmiar i brak uporządkowania danych może stanowić problem. W związku z tym warto zastanowić się nad powróceniem do tego źródła, gdybyśmy ustalili o jakie konkretnie dane chcielibyśmy rozszerzyć nasz zbiór. W takim przypadku możmy zweryfikować czy damy radę je stamtąd uzyskać.
+
+## Pominięte Zbiory
+
+Znalazłem całkiem sporo baz, kóre w mojej ocenie okazały się kompletnie nieprzydatne. Zdecydowałem, że nie będę odnosił się do każdej z osobna, lecz opiszę krótko jakie problemy napotykałem. Były to nieaktualne dane, dane o bardzo wąskiej tematyce(pojazdy z filmów lub bronie), wymagane uzyskanie licencji na dostęp do danych, oraz mała ilość danych lub pokrywające się z tym o już mamy.
