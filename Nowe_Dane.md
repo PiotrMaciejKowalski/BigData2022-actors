@@ -20,15 +20,16 @@ Zbiór danych pod poniższym linkiem zawiera o nominowanych oraz zdobywców Zło
 
 [Złote Globy](https://www.kaggle.com/datasets/unanimad/golden-globe-awards)
 
-Również podaję link do oficjalnej strony.
+Na kagglu jest informacja, że dane pochodzą z oficnalnej strony. W związku z tym podaję link. Możliwe, że damy radę je uzupełnić.
 
 [Złote Globy Oficjalna Strona](https://www.goldenglobes.com/awards-database)
 
 ## Nagrody Emmy
-Zbiór danych pod poniższym linkiem zawiera o nominowanych oraz zdobywców Emmy w latach 1949-2019. Nie znajdziemy tu informacji o roku ceremonii. Możemy jednak dowiedzieć się gdzie była emitowana produkcja.
+Zbiór danych pod poniższym linkiem zawiera o nominowanych oraz zdobywców Emmy w latach 1949-2019. W tym zbiorze każda nominacja ma swoje id. Przypisane są do niej takie wartości jak rok, kategoria, nominowany(film/serial), załoga(na przykład aktor wraz z rolą), wytwórnia, kanał emisji oraz informacja czy wygrał. Aktorzy wymienieni są z imienia i nazwiska wraz z odgrywaną rolą.
 
 [Emmy](https://www.kaggle.com/datasets/unanimad/emmy-awards?select=the_emmy_awards.csv)
 
+Na kagglu jest informacja, że dane pochodzą z oficnalnej strony. W związku z tym podaję link. Możliwe, że damy radę je uzupełnić.
 
 [Emmy Oficjalna Strona](https://www.emmys.com/awards/nominees-winners)
 
