@@ -5,6 +5,8 @@ df_title_basic:
 - titleType
 - originalTitle
 - isAdult
+- startYear
+- endYear
 - genres
 
 df_title_crew - None
@@ -22,8 +24,6 @@ df_title_ratings - None
 df_name_basics:
 - nconst
 - primaryName
-- birthYear
-- deathYear
 - knownForTitles
 
 ------------------------------------------------------
