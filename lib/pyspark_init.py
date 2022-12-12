@@ -246,3 +246,4 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
         collect_list("producer_emmy").alias("producer_emmy"),
         collect_list("win_emmy").alias("win_emmy"),
     )
+    return data
