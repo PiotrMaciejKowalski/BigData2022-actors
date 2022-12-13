@@ -1,5 +1,5 @@
 Poradnik pokazuje jak stworzyć skrót do współdzielonego folderu "bigdataaktorzy", żeby być w stanie dostać się do lokalizacji "/content/gdrive/MyDrive/bigdataaktorzy" i wczytać odpowiednie dane.
-Aby to zrobić wystarczy wykonać następujące kroki:
+Jeżeli nie mamy dostepu do tego folderu, to w pierwszej kolejności trzeba napisać na adres [bigdataaktorzy@gmail.com](bigdataaktorzy@gmail.com) z prośbą o udzielenie dostępu do folderu. Jeżeli mamy już dostep do folderu, należy wykonać następujące kroki:
 
 1. Po udostępnieniu nam folderu wchodzimy w naszym dysku Google w folder "Udostępnione dla mnie";
 2. odnajdujemy współdzielony folder "bigdataaktorzy";
