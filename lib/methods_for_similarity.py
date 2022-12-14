@@ -3,6 +3,8 @@ def pokrycie_przedzialow(przedzial1: list, przedzial2: list) -> float:
   # metoda zwraca liczbę z przedziału [0, 1]
   if len(przedzial1) != 2 or len(przedzial2) != 2:
     return 0
+  elif przedzial1[1] <= przedzial1[0] or przedzial2[1] <= przedzial2[0]:
+    return 0
   else:
     min_l = min(przedzial1[0], przedzial2[0])
     max_l = max(przedzial1[0], przedzial2[0])
