@@ -1,6 +1,6 @@
 # Metryka
 ## Cel użycia metryki/metryk
-W naszym projekcie metryki będziemy używać aby zbadać efektywność naszego modelu po etapie uczenia.
+W naszym projekcie metryki będziemy używać aby zbadać efektywność naszego modelu po zakończeniu uczenia.
 ## Co będzie mierzyć nasza metryka?
 Nasz model dla wybranego aktora szereguje aktorów ze zbioru i zwraca ustaloną liczbę najbardziej godnych polecenia. Kolejność wystąpienia aktorów na liście będzie od najbardziej podobnego do najmniej podobnego. W związku z tym metryka będzie porównywała wybranego aktora do aktorów z listy, przykładając większą wagę do tych którzy będą na niej wcześniej. Aby móc dokonać takiego zestawienia należy ustalić jakie parametry aktoró będziemy porównywać.
 ## Jakie parametry warto wziąć pod uwagę?
