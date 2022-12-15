@@ -6,6 +6,7 @@ Nasz model dla wybranego aktora szereguje aktorów ze zbioru i zwraca ustaloną 
 ## Jakie parametry warto wziąć pod uwagę?
 Najbardziej przydatne będą parametry które pozwolą nam w czytelny sposób rozróżnić czy para aktorów jest do siebie podobna. Przykładem może być płeć gdzie dla dwóch wybraych aktorw jest ona jednakowa lub nie. W podobny sposób można porównać czy dwóch aktorów najcześciej gra w tym samym gatunku filmów lub typie produkcji filmowej.
 ## Szkic metryki
+<pre>
 def (id_aktor, lista_id_aktorów):\
   result = 0\
   sum = 0\
@@ -22,6 +23,7 @@ def (id_aktor, lista_id_aktorów):\
     pozycja+= 1\
   result = sum/(max_licznik*(len(lista_id_aktorow))!)\
 return result
+</pre>
 ## Wyjaśnienie elementów funkcji
 id_aktora - id wybranego przez nas aktora\
 lista_id_aktorów - lista id aktorów zwróconych przez model\
