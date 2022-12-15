@@ -4,7 +4,7 @@ W naszym projekcie metryki będziemy używać aby zbadać efektywność naszego 
 ## Co będzie mierzyć nasza metryka?
 Nasz model dla wybranego aktora szereguje aktorów ze zbioru i zwraca ustaloną liczbę najbardziej godnych polecenia. Kolejność wystąpienia aktorów na liście będzie od najbardziej podobnego do najmniej podobnego. W związku z tym metryka będzie porównywała wybranego aktora do aktorów z listy, przykładając większą wagę do tych którzy będą na niej wcześniej. Aby móc dokonać takiego zestawienia należy ustalić jakie parametry aktoró będziemy porównywać.
 ## Jakie parametry warto wziąć pod uwagę?
-Najbardziej przydatne będą parametry które pozwolą nam w czytelny sposób rozróżnić czy para aktorów jest do siebie podobna. Przykładem może być płeć gdzie dla dwóch wybraych aktorw jest ona jednakowa lub nie. W podobny sposób można porównać czy dwóch aktorów najcześciej gra w tym samym gatunku filmów lub typie produkcji filmowej. Możemy wybrać taką liczbę parametró jaką uznamy za stosowne. Jednak musimy pamiętać, żrby były dla nas rozróżnialne.
+Najbardziej przydatne będą parametry które pozwolą nam w czytelny sposób rozróżnić czy para aktorów jest do siebie podobna. Przykładem może być płeć gdzie dla dwóch wybraych aktorw jest ona jednakowa lub nie. W podobny sposób można porównać czy dwóch aktorów najcześciej gra w tym samym gatunku filmów lub typie produkcji filmowej. Możemy wybrać taką liczbę parametró jaką uznamy za stosowne. Jednak musimy pamiętać, żeby były dla nas rozróżnialne.
 ## Szkic metryki
 <pre>
 def (id_aktor, lista_id_aktorów):\
