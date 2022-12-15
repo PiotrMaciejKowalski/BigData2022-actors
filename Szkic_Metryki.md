@@ -14,11 +14,11 @@ def (id_aktor, lista_id_aktorów):\
   for other_actor in lista_id_aktorow:\
     licznik = 0\
     if id_aktor.plec == other_actor.plec:\
-         licznik += 1\
+      licznik += 1\
     if id_aktor.top_gatunek == other_actor.top_gatuenk:\
-         licznik += 1\
+      licznik += 1\
     if id_aktor.top_typ_filmu == other_actor.top_typ_filmu:\
-         licznik += 1\
+      licznik += 1\
     sum += licznik/max_licznik * (len(lista_id_aktorow) - pozycja)\
     pozycja+= 1\
   result = sum/(max_licznik*(len(lista_id_aktorow))!)\
