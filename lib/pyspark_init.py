@@ -88,6 +88,14 @@ def load_data(spark: SparkSession) -> DataFrame:
         first("primaryName").alias("primaryName"),
         first("knownForTitles").alias("knownForTitles"),
     )
+    
+    for column in ['primaryProfession', 'knownForTitles']:
+        df_name_basics = df_name_basics.withColumn(column, when(df_name_basics[column] == "\\N", None).otherwise(df_name_basics[column]))
+    for column in ['titleType', 'primaryTitle', 'originalTitle', 'genres']:
+      df_title_basics = df_title_basics.withColumn(column, when(df_title_basics[column] == "\\N", None).otherwise(df_title_basics[column]))
+    for column in ['ordering', 'category', 'job', 'characters']:
+      df_title_principals = df_title_principals.withColumn(column, when(df_title_principals[column] == "\\N", None).otherwise(df_title_principals[column])
+
     return data
 
 
