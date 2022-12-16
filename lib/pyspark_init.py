@@ -2,7 +2,7 @@ import os
 import pyspark
 import findspark  # Czy na pewno potrzebny?
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import collect_list, first, min, max, split, explode
+from pyspark.sql.functions import collect_list, first, min, max, split, explode, when
 
 
 def create_spark_context() -> SparkSession:
