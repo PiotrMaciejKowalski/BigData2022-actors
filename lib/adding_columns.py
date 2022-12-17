@@ -53,3 +53,4 @@ def add_all_columns(data:DataFrame)->DataFrame:
     data = add_number_of_oscars(data)
     data = add_number_of_globes(data)
     data = add_number_of_emmy_awards(data)
+    return data
