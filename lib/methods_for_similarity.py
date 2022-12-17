@@ -5,11 +5,6 @@ def iou(lista1: list, lista2: list) -> float:
   else:
     intersection = []
     union = []
-    for element in lista1:
-      union.append(element)
-      if element in lista2:
-        intersection.append(element)
-    for element in lista2:
-      if element not in union:
-        union.append(element)
+    intersection = set(lista1).intersection(set(lista2))
+    union = set(lista1).union(set(lista2))
     return len(intersection)/len(union)
