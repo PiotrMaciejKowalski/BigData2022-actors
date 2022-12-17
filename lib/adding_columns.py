@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from pyspark.sql.functions import explode, col, count
+from pyspark.sql.functions import explode, col, count, udf
 import requests
 from bs4 import BeautifulSoup
 
@@ -77,8 +77,10 @@ def get_link_to_imdb_image(actor_id: str) -> str:
     image_info = str(soup.find('img', attrs={'class': 'poster'}))
     return extract_link_to_image(image_info)
 
+udf_get_link_to_image = udf(get_link_to_imdb_image)
+
 def add_url_to_actor_image(data:DataFrame)->DataFrame:
-    data.withColumn("image_url", get_link_to_imdb_image(data.nconst))
+    data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
     return data
 
 def add_all_columns(data:DataFrame)->DataFrame:
