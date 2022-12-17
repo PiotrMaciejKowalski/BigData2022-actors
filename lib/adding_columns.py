@@ -53,7 +53,7 @@ def add_number_of_films(data:DataFrame)->DataFrame:
     number_of_films = data.select("*", explode("tconst").alias("exploded"))\
         .groupBy("nconst", "tconst")\
         .agg(count("exploded").alias("no_films"))\
-        .select(["nconst", "no_nominations_emmy"])
+        .select(["nconst", "no_films"])
     data = data.join(number_of_films, on="nconst", how="left")
     return data
 
