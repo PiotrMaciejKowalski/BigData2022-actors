@@ -48,3 +48,8 @@ def add_number_of_emmy_awards(data:DataFrame)->DataFrame:
     data = data.join(emmy_nominations, on="nconst", how="left")    
     data = data.join(emmy_win, on="nconst", how="left")
     return data
+
+def add_all_columns(data:DataFrame)->DataFrame:
+    data = add_number_of_oscars(data)
+    data = add_number_of_globes(data)
+    data = add_number_of_emmy_awards(data)
