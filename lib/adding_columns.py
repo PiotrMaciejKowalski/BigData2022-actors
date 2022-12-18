@@ -49,8 +49,17 @@ def add_number_of_emmy_awards(data:DataFrame)->DataFrame:
     data = data.join(emmy_win, on="nconst", how="left")
     return data
 
+def add_number_of_films(data:DataFrame)->DataFrame:
+    number_of_films = data.select("*", explode("tconst").alias("exploded"))\
+        .groupBy("nconst", "tconst")\
+        .agg(count("exploded").alias("no_films"))\
+        .select(["nconst", "no_films"])
+    data = data.join(number_of_films, on="nconst", how="left")
+    return data
+
 def add_all_columns(data:DataFrame)->DataFrame:
     data = add_number_of_oscars(data)
     data = add_number_of_globes(data)
     data = add_number_of_emmy_awards(data)
+    data = add_number_of_films(data)
     return data
