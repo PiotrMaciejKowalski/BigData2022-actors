@@ -1,5 +1,6 @@
-from pandas import DataFrame
-from pyspark.sql.functions import explode, col, count
+from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql.functions import explode, col, count, avg
+from pyspark_init import load_ratings_data
 
 def add_number_of_oscars(data:DataFrame)->DataFrame:
     oscars_nominations = data.select("*", explode("winner_oscars").alias("exploded"))\
@@ -55,6 +56,15 @@ def add_number_of_films(data:DataFrame)->DataFrame:
         .agg(count("exploded").alias("no_films"))\
         .select(["nconst", "no_films"])
     data = data.join(number_of_films, on="nconst", how="left")
+    return data
+
+def add_average_films_ratings(spark:SparkSession, data:DataFrame)->DataFrame:
+    films_ratings = load_ratings_data(spark)
+    data_with_ratings = data.join(films_ratings, on="tconst", how="left")\
+        .groupBy("nconst")\
+        .agg(avg("averageRating").alias("average_films_rating"))\
+        .select(["nconst", "average_films_rating"])
+    data = data.join(data_with_ratings, on="nconst", how="left")
     return data
 
 def add_all_columns(data:DataFrame)->DataFrame:
