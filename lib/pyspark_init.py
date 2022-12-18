@@ -197,3 +197,4 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     )
     data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
     return data
+    #TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow
