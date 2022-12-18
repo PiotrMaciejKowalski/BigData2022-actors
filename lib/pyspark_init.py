@@ -3,6 +3,7 @@ import pyspark
 import findspark  # Czy na pewno potrzebny?
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import collect_list, first, min, max, split, explode
+from lib.adding_columns import udf_get_link_to_image
 
 
 def create_spark_context() -> SparkSession:
@@ -194,4 +195,5 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
         collect_list("producer_emmy").alias("producer_emmy"),
         collect_list("win_emmy").alias("win_emmy"),
     )
+    data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
     return data

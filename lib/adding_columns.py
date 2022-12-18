@@ -79,14 +79,9 @@ def get_link_to_imdb_image(actor_id: str) -> str:
 
 udf_get_link_to_image = udf(get_link_to_imdb_image)
 
-def add_url_to_actor_image(data:DataFrame)->DataFrame:
-    data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
-    return data
-
 def add_all_columns(data:DataFrame)->DataFrame:
     data = add_number_of_oscars(data)
     data = add_number_of_globes(data)
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
-    data = add_url_to_actor_image(data)
     return data
