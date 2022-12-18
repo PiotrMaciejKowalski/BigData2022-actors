@@ -6,8 +6,6 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
     if not lista1 or not lista2:
         return 0
     else:
-        intersection = []
-        union = []
         intersection = set(lista1).intersection(set(lista2))
         union = set(lista1).union(set(lista2))
         return len(intersection) / len(union)
