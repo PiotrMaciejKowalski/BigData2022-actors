@@ -91,6 +91,9 @@ def load_data(spark: SparkSession) -> DataFrame:
     )
     return data
 
+def load_ratings_data(spark:SparkSession)->DataFrame:
+    df_title_ratings=spark.read.option("header","true").option("delimiter","\t").csv('title.ratings.csv')
+    return df_title_ratings
 
 def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     oscars = spark.read.option("header", "true").csv("the_oscar_award.csv")
