@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import explode, col, count, avg
-from pyspark_init import load_ratings_data
+from lib.pyspark_init import load_ratings_data
 
 def add_number_of_oscars(data:DataFrame)->DataFrame:
     oscars_nominations = data.select("*", explode("winner_oscars").alias("exploded"))\
