@@ -9,3 +9,10 @@ z opisem pól
 [opis](https://www.imdb.com/interfaces/)
 
 Model ma w założeniu wyliczać dla dwóch rekordów aktorów (ludzi filmu) liczbę z przedziału [-1,1].
+
+# Instalacja lokalnej condy
+```
+conda create --name bigdata python=3.9
+conda activate bigdata
+pip install pyspark
+```
