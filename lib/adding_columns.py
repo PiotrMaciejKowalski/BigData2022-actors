@@ -1,5 +1,9 @@
+from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import explode, col, count, avg
+from pyspark.sql.functions import explode, col, count, avg, udf
+import requests
+from bs4 import BeautifulSoup
+
 from lib.pyspark_init import load_ratings_data
 
 def add_number_of_oscars(data:DataFrame)->DataFrame:
@@ -67,6 +71,25 @@ def add_average_films_ratings(spark:SparkSession, data:DataFrame)->DataFrame:
         .select(["nconst", "average_films_rating"])
     data = data.join(data_with_ratings, on="nconst", how="left")
     return data
+
+def extract_link_to_image(text: str) -> str:
+    try:
+        first = 'src="'
+        last = '._V1'
+        start = text.rindex(first) + len(first)
+        end = text.rindex(last, start)
+        return text[start: end]
+    except ValueError:
+        return None
+
+def get_link_to_imdb_image(actor_id: str) -> str:
+    url = f'https://www.imdb.com/name/{actor_id}/mediaindex'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    image_info = str(soup.find('img', attrs={'class': 'poster'}))
+    return extract_link_to_image(image_info)
+
+udf_get_link_to_image = udf(get_link_to_imdb_image)
 
 def add_all_columns(spark:SparkSession, data:DataFrame)->DataFrame:
     data = add_number_of_oscars(data)
