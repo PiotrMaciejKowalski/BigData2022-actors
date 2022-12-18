@@ -7,8 +7,9 @@ from lib.adding_columns import udf_get_link_to_image
 
 
 def create_spark_context() -> SparkSession:
-    os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
-    os.environ["SPARK_HOME"] = "/content/spark-3.3.1-bin-hadoop2"
+    if "SPARK_HOME" not in os.environ:
+        os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+        os.environ["SPARK_HOME"] = "/content/spark-3.3.1-bin-hadoop2"
     spark = SparkSession.builder.appName("Colab").getOrCreate()
     return spark
 
@@ -91,6 +92,9 @@ def load_data(spark: SparkSession) -> DataFrame:
     )
     return data
 
+def load_ratings_data(spark:SparkSession)->DataFrame:
+    df_title_ratings=spark.read.option("header","true").option("delimiter","\t").csv('title.ratings.csv')
+    return df_title_ratings
 
 def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     oscars = spark.read.option("header", "true").csv("the_oscar_award.csv")
@@ -140,7 +144,9 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     emmy_awards_selected = emmy_awards_selected.withColumn(
         "staff", explode(split("staff", ", "))
     )
-    emmy_awards_selected = emmy_awards_selected.groupby("nominee", "id", "year", "category", "company", "producer", "win").agg(
+    emmy_awards_selected = emmy_awards_selected.groupby(
+        "nominee", "id", "year", "category", "company", "producer", "win"
+    ).agg(
         first("staff").alias("staff"),
     )
     oscars_selected = oscars.select(
@@ -171,14 +177,44 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
         .withColumnRenamed("win", "win_emmy")
     )
     data = data.join(oscars_selected, data.primaryName == oscars_selected.name, "left")
-    data = data.groupby("nconst", "tconst", "titleType", "originalTitle", "isAdult", "startYear", "endYear", "genres", "category", "characters", "primaryName", "knownForTitles").agg(
+    data = data.groupby(
+        "nconst",
+        "tconst",
+        "titleType",
+        "originalTitle",
+        "isAdult",
+        "startYear",
+        "endYear",
+        "genres",
+        "category",
+        "characters",
+        "primaryName",
+        "knownForTitles",
+    ).agg(
         collect_list("year_oscars").alias("year_oscars"),
         first("category_oscars").alias("category_oscars"),
         collect_list("film_oscars").alias("film_oscars"),
         collect_list("winner_oscars").alias("winner_oscars"),
     )
     data = data.join(globe_selected, data.primaryName == globe_selected.nominee, "left")
-    data = data.groupby("nconst", "tconst", "titleType", "originalTitle", "isAdult", "startYear", "endYear", "genres", "category", "characters", "primaryName", "knownForTitles", "year_oscars", "category_oscars", "film_oscars", "winner_oscars").agg(
+    data = data.groupby(
+        "nconst",
+        "tconst",
+        "titleType",
+        "originalTitle",
+        "isAdult",
+        "startYear",
+        "endYear",
+        "genres",
+        "category",
+        "characters",
+        "primaryName",
+        "knownForTitles",
+        "year_oscars",
+        "category_oscars",
+        "film_oscars",
+        "winner_oscars",
+    ).agg(
         collect_list("year_globes").alias("year_globes"),
         collect_list("category_globes").alias("category_globes"),
         collect_list("film_globes").alias("film_globes"),
@@ -187,7 +223,28 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = data.join(
         emmy_awards_selected, data.primaryName == emmy_awards_selected.staff, "left"
     )
-    data = data.groupby("nconst", "tconst", "titleType", "originalTitle", "isAdult", "startYear", "endYear", "genres", "category", "characters", "primaryName", "knownForTitles", "year_oscars", "category_oscars", "film_oscars", "winner_oscars", "year_globes", "category_globes", "film_globes", "win_globes").agg(
+    data = data.groupby(
+        "nconst",
+        "tconst",
+        "titleType",
+        "originalTitle",
+        "isAdult",
+        "startYear",
+        "endYear",
+        "genres",
+        "category",
+        "characters",
+        "primaryName",
+        "knownForTitles",
+        "year_oscars",
+        "category_oscars",
+        "film_oscars",
+        "winner_oscars",
+        "year_globes",
+        "category_globes",
+        "film_globes",
+        "win_globes",
+    ).agg(
         collect_list("year_emmy").alias("year_emmy"),
         collect_list("category_emmy").alias("category_emmy"),
         collect_list("nominee_emmy").alias("nominee_emmy"),
@@ -198,3 +255,4 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
     return data
     #TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow
+    
