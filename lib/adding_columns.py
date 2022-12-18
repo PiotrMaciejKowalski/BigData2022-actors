@@ -67,9 +67,10 @@ def add_average_films_ratings(spark:SparkSession, data:DataFrame)->DataFrame:
     data = data.join(data_with_ratings, on="nconst", how="left")
     return data
 
-def add_all_columns(data:DataFrame)->DataFrame:
+def add_all_columns(spark:SparkSession, data:DataFrame)->DataFrame:
     data = add_number_of_oscars(data)
     data = add_number_of_globes(data)
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
+    data = add_average_films_ratings(spark, data)
     return data
