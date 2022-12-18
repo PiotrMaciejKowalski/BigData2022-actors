@@ -12,7 +12,7 @@ def test_iou_one_proper_list():
     assert iou(["a", "b", "c", "d", "e", "f"], []) == 0, "should be 0"
 
 
-def test_iou_two_proper_lists():
+def test_iou_two_improper_lists():
     assert iou([], []) == 0, "should be 0"
 
 
