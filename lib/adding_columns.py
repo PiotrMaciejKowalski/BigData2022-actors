@@ -60,8 +60,8 @@ def add_number_of_films(data:DataFrame)->DataFrame:
 
 def add_average_films_ratings(spark:SparkSession, data:DataFrame)->DataFrame:
     films_ratings = load_ratings_data(spark)
-    data_with_ratings = data.select("*", explode("tconst").alias("exploded"))\
-        .join(films_ratings, data.exploded == films_ratings.tconst, how="left")\
+    data_exploded = data.select("*", explode("tconst").alias("exploded"))
+    data_with_ratings = data_exploded.join(films_ratings, data_exploded.exploded == films_ratings.tconst, how="left")\
         .groupBy("nconst")\
         .agg(avg("averageRating").alias("average_films_rating"))\
         .select(["nconst", "average_films_rating"])
