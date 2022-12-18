@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 
 
 def pokrycie_przedzialow(przedzial1: List[int], przedzial2: List[int]) -> float:
@@ -11,14 +11,13 @@ def pokrycie_przedzialow(przedzial1: List[int], przedzial2: List[int]) -> float:
     min_p = min(przedzial1[1], przedzial2[1])
     max_p = max(przedzial1[1], przedzial2[1])
     return (min_p - max_l) / (max_p - min_l)
-def iou(lista1: list[any], lista2: list[any]) -> float:
-  ''' metoda przyjmuje jako argument dwie listy i zwraca ich indeks Jaccarda, czyli liczbę z przedzialu [0,1]
-  '''
-  if not lista1 or not lista2:
-    return 0
-  else:
-    intersection = []
-    union = []
-    intersection = set(lista1).intersection(set(lista2))
-    union = set(lista1).union(set(lista2))
-    return len(intersection)/len(union)
+    
+
+def iou(lista1: List[Any], lista2: List[Any]) -> float:
+    """metoda przyjmuje jako argument dwie listy i zwraca ich indeks Jaccarda, czyli liczbę z przedzialu [0,1]"""
+    if not lista1 or not lista2:
+        return 0
+    else:
+        intersection = set(lista1).intersection(set(lista2))
+        union = set(lista1).union(set(lista2))
+        return len(intersection) / len(union)
