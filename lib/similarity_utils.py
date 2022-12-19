@@ -33,8 +33,14 @@ def sort_two_lists(list1: List[float], list2: List[Any], reverse=True):
     return list1, list2
 
 
+def find_actor(data: pd.DataFrame, actor_id: str) -> int:
+    """metoda na podstawie ramki danych oraz id aktora, zwraca jego index w ramce danych"""
+    actor_index = data[data['nconst'] == actor_id].index
+    return actor_index[0]
+
+
 def prepare_pandas_row(pandas_row: pd.DataFrame) -> List[Any]:
-    """metoda zamienia wiersz wydobyty z Pandas DataFrame i przekształca go w pythonową  listę"""
+    """metoda zamienia wiersz wydobyty z Pandas DataFrame i przekształca go w pythonową listę"""
     p_list = []
     for value in pandas_row:
         try:
