@@ -57,14 +57,15 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
     if actor1[0] == actor2[0]:
         return -1
     else:
-        weights = [0.6, 0.2, 0.2]
+        weights = [0.4, 0.2, 0.2, 0.2]
         values = [
-            iou(actor1[1], actor2[1]),  # similarty ze względu na ilość wspólnych filmów
-            iou(actor1[2], actor2[2]),  # similarity ze względu na rodzaj granych produkcji
-            iou(actor1[7], actor2[7])  # similarity ze względu na gatunek granych produkcji
+            iou(actor1[1], actor2[1]),           # similarty ze względu na ilość wspólnych filmów
+            iou(actor1[2], actor2[2]),           # similarity ze względu na rodzaj granych produkcji
+            iou(actor1[7], actor2[7]),           # similarity ze względu na gatunek granych produkcji
+            1 if actor1[8] == actor2[8] else 0   # similarity ze względu na tę samą płeć
         ]
-        no_of_columns = 3
-        return sum(weights[i] * values[i] for i in range(no_of_columns)) * 2 - 1
+        #TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
+        return sum(weights[i] * values[i] for i in range(len(weights))) * 2 - 1
 
 
 def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]):
@@ -84,4 +85,4 @@ def print_most_similiar_actors(data: pd.DataFrame, main_actor: List[Any], ids: L
     dane o aktorach z listy ids są odczytywane z ramki danych data"""
     print(f'Najbardziej podobnymi do {main_actor[10]} aktorami/aktorkami są w kolejności:')
     for i in range(n):
-        print(f'  - {find_actor(data, ids[i])[10]} z similarity równym {round(values[i], precision)}')
+        print(f'  - {find_actor(data, ids[i])[10]} z similarity równym: {round(values[i], precision)}')
