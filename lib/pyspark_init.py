@@ -3,7 +3,7 @@ import pyspark
 import findspark  # Czy na pewno potrzebny?
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.functions import collect_list, first, min, max, split, explode
-from lib.adding_columns import udf_get_link_to_image
+from lib.url_utils import udf_get_link_to_image
 
 
 def create_spark_context() -> SparkSession:
@@ -92,9 +92,15 @@ def load_data(spark: SparkSession) -> DataFrame:
     )
     return data
 
-def load_ratings_data(spark:SparkSession)->DataFrame:
-    df_title_ratings=spark.read.option("header","true").option("delimiter","\t").csv('title.ratings.csv')
+
+def load_ratings_data(spark: SparkSession) -> DataFrame:
+    df_title_ratings = (
+        spark.read.option("header", "true")
+        .option("delimiter", "\t")
+        .csv("title.ratings.csv")
+    )
     return df_title_ratings
+
 
 def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     oscars = spark.read.option("header", "true").csv("the_oscar_award.csv")
@@ -254,5 +260,4 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
     )
     data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
     return data
-    #TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow
-    
+    # TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow
