@@ -24,7 +24,7 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
         return len(intersection) / len(union)
 
 
-def sort_two_lists(list1: List[float], list2: List[Any], reverse=True) -> tuple[List[float], List[Any]]:
+def sort_two_lists(list1: List[float], list2: List[Any], reverse=True):
     """metoda sortuje dwie listy równocześnie
     list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
@@ -61,7 +61,7 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
         return sum(weights[i] * values[i] for i in range(no_of_columns)) * 2 - 1
 
 
-def similarity_1_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> tuple[List[str], List[float]]:
+def similarity_1_vs_all(data: pd.DataFrame, main_actor: List[Any]):
     ids = []
     similarities = []
     for i in range(len(data)):
