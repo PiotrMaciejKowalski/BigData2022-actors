@@ -24,7 +24,7 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
         return len(intersection) / len(union)
 
 
-def sort_two_lists(list1: List[float], list2: List[Any], reverse=True):
+def sort_two_lists(list1: List[Any], list2: List[Any], reverse=True):
     """metoda sortuje dwie listy równocześnie
     list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
@@ -33,10 +33,10 @@ def sort_two_lists(list1: List[float], list2: List[Any], reverse=True):
     return list1, list2
 
 
-def find_actor(data: pd.DataFrame, actor_id: str) -> int:
-    """metoda na podstawie ramki danych oraz id aktora, zwraca jego index w ramce danych"""
+def find_actor(data: pd.DataFrame, actor_id: str) -> List[Any]:
+    """metoda na podstawie ramki danych oraz id aktora, zwraca jego dane z ramki danych"""
     actor_index = data[data['nconst'] == actor_id].index
-    return actor_index[0]
+    return data.iloc[actor_index[0]]
 
 
 def prepare_pandas_row(pandas_row: pd.DataFrame) -> List[Any]:
