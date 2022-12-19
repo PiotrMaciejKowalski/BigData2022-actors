@@ -67,7 +67,7 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
         return sum(weights[i] * values[i] for i in range(no_of_columns)) * 2 - 1
 
 
-def similarity_1_vs_all(data: pd.DataFrame, main_actor: List[Any]):
+def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]):
     ids = []
     similarities = []
     for i in range(len(data)):
@@ -75,3 +75,13 @@ def similarity_1_vs_all(data: pd.DataFrame, main_actor: List[Any]):
         ids.append(actor[0])
         similarities.append(similarity(main_actor, actor[0:]))
     return ids, similarities
+
+
+def print_most_similiar_actors(data: pd.DataFrame, main_actor: List[Any], ids: List[str], values: List[float],
+                               n: int = 3, precision: int = 3) -> None:
+    """metoda wyświetla tekst o n najpodobniejszych do wybranego aktora aktorów
+    metoda wyświetla imię głownego aktora, imiona najbardziej podbnych aktorów i ich similarity
+    dane o aktorach z listy ids są odczytywane z ramki danych data"""
+    print(f'Najbardziej podobnymi do {main_actor[10]} aktorami/aktorkami są w kolejności:')
+    for i in range(top_no):
+        print(f'  - {find_actor(data, ids[i])[10]} z similarity równym {round(values[i], precision)}')
