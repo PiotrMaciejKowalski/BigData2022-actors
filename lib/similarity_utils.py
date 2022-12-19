@@ -83,5 +83,5 @@ def print_most_similiar_actors(data: pd.DataFrame, main_actor: List[Any], ids: L
     metoda wyświetla imię głownego aktora, imiona najbardziej podbnych aktorów i ich similarity
     dane o aktorach z listy ids są odczytywane z ramki danych data"""
     print(f'Najbardziej podobnymi do {main_actor[10]} aktorami/aktorkami są w kolejności:')
-    for i in range(top_no):
+    for i in range(n):
         print(f'  - {find_actor(data, ids[i])[10]} z similarity równym {round(values[i], precision)}')
