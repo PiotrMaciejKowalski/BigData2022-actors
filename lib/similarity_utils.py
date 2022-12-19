@@ -24,7 +24,7 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
         return len(intersection) / len(union)
 
 
-def sort_two_lists(list1: List[Any], list2: List[Any], reverse=True) -> tuple[List[Any], List[Any]]:
+def sort_two_lists(list1: List[Any], list2: List[Any], reverse=True):
     """metoda sortuje dwie listy równocześnie
     list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
