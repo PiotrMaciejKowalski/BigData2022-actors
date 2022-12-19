@@ -24,7 +24,7 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
         return len(intersection) / len(union)
 
 
-def sort_two_lists(list1: List[Any], list2: List[Any], reverse=True):
+def sort_two_lists(list1: List[Any], list2: List[Any], reverse=True) -> tuple[List[Any], List[Any]]:
     """metoda sortuje dwie listy równocześnie
     list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
@@ -54,21 +54,20 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
     """metoda licząca similarity pomiędzy dwoma aktorami
     jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1]
     metoda jest przygotowana pod dane ze zbioru JOINED_DATA"""
-    if actor1[0] == actor2[0]:
-        return -1
-    else:
-        weights = [0.4, 0.2, 0.2, 0.2]
-        values = [
-            iou(actor1[1], actor2[1]),           # similarty ze względu na ilość wspólnych filmów
-            iou(actor1[2], actor2[2]),           # similarity ze względu na rodzaj granych produkcji
-            iou(actor1[7], actor2[7]),           # similarity ze względu na gatunek granych produkcji
-            1 if actor1[8] == actor2[8] else 0   # similarity ze względu na tę samą płeć
-        ]
-        #TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
-        return sum(weights[i] * values[i] for i in range(len(weights))) * 2 - 1
+    weights = [0.3, 0.2, 0.3, 0.2]
+    values = [
+        iou(actor1[1], actor2[1]),           # similarty ze względu na ilość wspólnych filmów
+        iou(actor1[2], actor2[2]),           # similarity ze względu na rodzaj granych produkcji
+        iou(actor1[7], actor2[7]),           # similarity ze względu na gatunek granych produkcji
+        1 if actor1[8] == actor2[8] else 0   # similarity ze względu na tę samą płeć
+    ]
+    #TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
+    return sum(weights[i] * values[i] for i in range(4)) * 2 - 1
 
 
-def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]):
+def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> tuple[List[str], List[float]]:
+    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data
+    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest funkcja similarity"""
     ids = []
     similarities = []
     for i in range(len(data)):
@@ -79,10 +78,14 @@ def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]):
 
 
 def print_most_similiar_actors(data: pd.DataFrame, main_actor: List[Any], ids: List[str], values: List[float],
-                               n: int = 3, precision: int = 3) -> None:
+                               n: int = 3, precision: int = 3, show_self: bool = False) -> None:
     """metoda wyświetla tekst o n najpodobniejszych do wybranego aktora aktorów
     metoda wyświetla imię głownego aktora, imiona najbardziej podbnych aktorów i ich similarity
     dane o aktorach z listy ids są odczytywane z ramki danych data"""
     print(f'Najbardziej podobnymi do {main_actor[10]} aktorami/aktorkami są w kolejności:')
-    for i in range(n):
-        print(f'  - {find_actor(data, ids[i])[10]} z similarity równym: {round(values[i], precision)}')
+    if not show_self:
+        for i in range(n):
+            print(f'  - {find_actor(data, ids[i + 1])[10]} z similarity równym: {round(values[i + 1], precision)}')
+    else:
+        for i in range(n):
+            print(f'  - {find_actor(data, ids[i])[10]} z similarity równym: {round(values[i], precision)}')
