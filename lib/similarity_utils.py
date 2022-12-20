@@ -79,10 +79,10 @@ def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> Tuple[Li
     return ids, similarities
 
 
-def print_most_similiar_actors(data: pd.DataFrame, main_actor: List[Any], ids: List[str], values: List[float]) -> None:
+def print_most_similiar_actors(data: pd.DataFrame, main_actor: List[Any], ids: List[str], values: List[float], n: int = 3) -> None:
     """metoda wyświetla tekst o n najpodobniejszych do wybranego aktora aktorów
     metoda wyświetla imię głownego aktora, imiona najbardziej podbnych aktorów i ich similarity
     dane o aktorach z listy ids są odczytywane z ramki danych data"""
     print(f'Najbardziej podobnymi do {main_actor[10]} aktorami/aktorkami są w kolejności:')
-    for i in range(3):
-        print(f'  - {find_actor(data, ids[i + 1])[10]} z similarity równym: {round(values[i + 1], 5)}')
+    for i in range(n):
+        print(f'  - {find_actor(data, ids[i + 1])[10]} z similarity równym: {round(values[i + 1], 3)}')
