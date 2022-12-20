@@ -1,5 +1,6 @@
 from typing import List, Any, Tuple
 import pandas as pd
+import numpy
 
 
 def pokrycie_przedzialow(przedzial1: List[int], przedzial2: List[int]) -> float:
@@ -43,9 +44,9 @@ def prepare_pandas_row(pandas_row: pd.DataFrame) -> List[Any]:
     """metoda zamienia wiersz wydobyty z Pandas DataFrame i przekształca go w pythonową listę"""
     p_list = []
     for value in pandas_row:
-        try:
+        if type(value) is numpy.ndarray:
             p_list.append(value.tolist())
-        except AttributeError:
+        else:
             p_list.append(value)
     return p_list
 
@@ -61,6 +62,7 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
         iou(actor1[7], actor2[7]),           # similarity ze względu na gatunek granych produkcji
         1 if actor1[8] == actor2[8] else 0   # similarity ze względu na tę samą płeć
     ]
+    assert len(weights) == len(values)
     #TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
     return sum(weights[i] * values[i] for i in range(4)) * 2 - 1
 
