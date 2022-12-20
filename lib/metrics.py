@@ -16,8 +16,8 @@ def simple_metric(rankings: Dict[str, List[str], query_data: pd.DataFrame, refer
             if set(query_data.loc[query_data['nconst'] == actor, 'originalTitle']) & set(reference_data.loc[ reference_data['nconst'] == other_actor, 'originalTitle']) != set()
                licznik += 1   
             sum += licznik/5 * (5 - pozycja) #d dla pięciu aktorów oraz 5 parametrów
-        result = sum/120
-    return resul
+        result = sum/15
+    return result
                                  
 """
 rankings - odwzorowanie, które gromadzi stałe top n-rekomendacji. Same n może zostać wydedukowane z rozmiaru list, który musi być stały
