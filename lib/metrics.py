@@ -5,9 +5,17 @@ def simple_metric(rankings: Dict[str, List[str], query_data: pd.DataFrame, refer
     for actor in rankings:
         for other_actor in rankings[actor]:
             licznik = 0
-            if query_data['category']where(query_data['nconst'] = actor) = reference_data['category']where(reference_data['nconst'] = other_actor):
+            if query_data.loc[query_data['nconst'] == actor, 'category'].iloc[0] ==  reference_data.loc[ reference_data['nconst'] == other_actor, 'category'].iloc[0]
+               licznik += 1
+            if query_data.loc[query_data['nconst'] == actor, 'top_titleType'].iloc[0] ==  reference_data.loc[ reference_data['nconst'] == other_actor, 'top_titleType'].iloc[0]
                 licznik += 1
-            sum += licznik/max_licznik * (len(lista_id_aktorow) - pozycja)
+            if query_data.loc[query_data['nconst'] == actor, 'top_genres'].iloc[0] ==  reference_data.loc[ reference_data['nconst'] == other_actor, 'top_genres'].iloc[0]
+                licznik += 1
+            if set(query_data.loc[query_data['nconst'] == actor, 'characters']) & set(reference_data.loc[ reference_data['nconst'] == other_actor, 'category']) != set()
+               licznik += 1    
+            if set(query_data.loc[query_data['nconst'] == actor, 'originalTitle']) & set(reference_data.loc[ reference_data['nconst'] == other_actor, 'originalTitle']) != set()
+               licznik += 1   
+            sum += licznik/5 * (len(lista_id_aktorow) - pozycja)
         
                                  
 """
