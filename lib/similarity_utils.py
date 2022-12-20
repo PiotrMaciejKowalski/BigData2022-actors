@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Tuple
 import pandas as pd
 
 
@@ -24,7 +24,7 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
         return len(intersection) / len(union)
 
 
-def sort_two_lists(list1: List[Any], list2: List[Any], reverse: bool = True):
+def sort_two_lists(list1: List[Any], list2: List[Any], reverse: bool = True) -> Tuple[List[Any], List[Any]]:
     """metoda sortuje dwie listy równocześnie
     list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
@@ -65,7 +65,7 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
     return sum(weights[i] * values[i] for i in range(4)) * 2 - 1
 
 
-def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]):
+def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> tuple[List[str], List[float]]:
     """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data
     każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest funkcja similarity"""
     ids = []
