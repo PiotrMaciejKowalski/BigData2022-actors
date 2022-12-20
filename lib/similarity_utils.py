@@ -65,7 +65,7 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
     return sum(weights[i] * values[i] for i in range(4)) * 2 - 1
 
 
-def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> tuple[List[str], List[float]]:
+def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> Tuple[List[str], List[float]]:
     """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data
     każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest funkcja similarity"""
     ids = []
