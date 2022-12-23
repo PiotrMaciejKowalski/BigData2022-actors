@@ -25,12 +25,18 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
         return len(intersection) / len(union)
 
 
-def sort_two_lists(list1: List[Any], list2: List[Any], reverse: bool = True) -> Tuple[List[Any], List[Any]]:
+def sort_two_lists(list1: List[Any], list2: List[Any], sort_list_index: int = 1, reverse: bool = True) -> Tuple[List[Any], List[Any]]:
     """metoda sortuje dwie listy równocześnie
     list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1
+    indeks sortowanej listy oznacza, po wartościach której z dwóch list nastepuje sortowanie
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
-    zipped_lists = zip(list1, list2)
-    list1, list2 = zip(*sorted(zipped_lists, reverse=reverse))
+    assert sort_list_index in [1, 2], "indeks sortowanej listy powinien być równy 1 albo 2"
+    if sort_list_index == 1:
+        zipped_lists = zip(list1, list2)
+        list1, list2 = zip(*sorted(zipped_lists, reverse=reverse))
+    elif sort_list_index == 2:
+        zipped_lists = zip(list2, list1)
+        list2, list1 = zip(*sorted(zipped_lists, reverse=reverse))
     return list1, list2
 
 
@@ -57,14 +63,15 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
     metoda jest przygotowana pod dane ze zbioru JOINED_DATA"""
     weights = [0.3, 0.2, 0.3, 0.2]
     values = [
-        iou(actor1[1], actor2[1]),           # similarty ze względu na ilość wspólnych filmów
-        iou(actor1[2], actor2[2]),           # similarity ze względu na rodzaj granych produkcji
-        iou(actor1[7], actor2[7]),           # similarity ze względu na gatunek granych produkcji
-        1 if actor1[8] == actor2[8] else 0   # similarity ze względu na tę samą płeć
+        iou(actor1[1], actor2[1]),  # similarity ze względu na ilość wspólnych filmów
+        iou(actor1[2], actor2[2]),  # similarity ze względu na rodzaj granych produkcji
+        iou(actor1[7], actor2[7]),  # similarity ze względu na gatunek granych produkcji
+        1 if actor1[8] == actor2[8] else 0  # similarity ze względu na tę samą płeć
     ]
-    assert len(weights) == len(values)
-    #TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
-    return sum(weights[i] * values[i] for i in range(4)) * 2 - 1
+    length = len(weights)
+    assert length == len(values)
+    # TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
+    return sum(weights[i] * values[i] for i in range(length)) * 2 - 1
 
 
 def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> Tuple[List[str], List[float]]:
@@ -79,10 +86,28 @@ def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> Tuple[Li
     return ids, similarities
 
 
-def print_most_similiar_actors(data: pd.DataFrame, main_actor: List[Any], ids: List[str], values: List[float], n: int = 3) -> None:
+def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5, include_self: bool = False) -> Tuple[List[str], List[float]]:
+    """metoda przyjmuje liste z id aktorów oraz listę z wartościami ich similarity
+    zwracana jest wybrana liczba pierwszych elementów z posortowanych list
+    aby dostać ranking (id) aktorów wystarczy wziąć pierwszą wartość zwracaną przez metodę"""
+    ids, values = sort_two_lists(ids, values, sort_list_index = 2, reverse = True)
+    if include_self:
+        return ids[:top_length], values[:top_length]
+    else:
+        return ids[1:top_length + 1], values[1:top_length + 1]
+
+
+def replace_ids_with_names(data: pd.DataFrame, ids: List[str]) -> List[str]:
+    """metoda zamienia listę id aktorów, na listę ich imion
+    wartości odczytywane na podstawie ramki danych data"""
+    return [find_actor(data, id)[10] for id in ids]
+
+
+def print_top_similiar(main_actor: str, names: List[str], values: List[float]) -> None:
     """metoda wyświetla tekst o n najpodobniejszych do wybranego aktora aktorów
-    metoda wyświetla imię głownego aktora, imiona najbardziej podbnych aktorów i ich similarity
-    dane o aktorach z listy ids są odczytywane z ramki danych data"""
-    print(f'Najbardziej podobnymi do {main_actor[10]} aktorami/aktorkami są w kolejności:')
-    for i in range(n):
-        print(f'  - {find_actor(data, ids[i + 1])[10]} z similarity równym: {round(values[i + 1], 3)}')
+    metoda wyświetla imię głownego aktora, imiona najbardziej podbnych aktorów i ich similarity"""
+    print(f"Najbardziej podobnymi do {main_actor} aktorami/aktorkami są w kolejności:")
+    length = len(names)
+    assert length == len(values), "listy z imionami i wartościami są różnych długości"
+    for i in range(length):
+        print(f'  - {names[i]} z similarity równym: {round(values[i], 3)}')
