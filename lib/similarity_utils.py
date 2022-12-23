@@ -4,7 +4,7 @@ import numpy
 
 
 def pokrycie_przedzialow(przedzial1: List[int], przedzial2: List[int]) -> float:
-    """metoda przyjmuje jako argument dwie listy w postaci przedzialu liczbowego, tj. lista = [a, b], gdzie a <= b
+    """metoda przyjmuje jako argument dwie listy w postaci przedzialu liczbowego, tj. lista = [a, b], gdzie a <= b;
     metoda zwraca liczbę z przedziału [0, 1]"""
     assert len(przedzial1) == 2 and len(przedzial2) == 2, "dlugosci podanych list powinny wynosic 2"
     assert przedzial1[1] >= przedzial1[0] and przedzial2[1] >= przedzial2[0], "przedzial [a, b] jest niepoprawny (b<a)"
@@ -25,10 +25,11 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
         return len(intersection) / len(union)
 
 
-def sort_two_lists(list1: List[Any], list2: List[Any], sort_list_index: int = 1, reverse: bool = True) -> Tuple[List[Any], List[Any]]:
-    """metoda sortuje dwie listy równocześnie
-    list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1
-    indeks sortowanej listy oznacza, po wartościach której z dwóch list nastepuje sortowanie
+def sort_two_lists(list1: List[Any], list2: List[Any], sort_list_index: int = 1, reverse: bool = True) -> Tuple[
+    List[Any], List[Any]]:
+    """metoda sortuje dwie listy równocześnie;
+    list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1;
+    indeks sortowanej listy mówi po wartościach której z dwóch list następuje sortowanie;
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
     assert sort_list_index in [1, 2], "indeks sortowanej listy powinien być równy 1 albo 2"
     if sort_list_index == 1:
@@ -58,8 +59,8 @@ def prepare_pandas_row(pandas_row: pd.DataFrame) -> List[Any]:
 
 
 def similarity(actor1: List[Any], actor2: List[Any]) -> float:
-    """metoda licząca similarity pomiędzy dwoma aktorami
-    jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1]
+    """metoda licząca similarity pomiędzy dwoma aktorami;
+    jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1];
     metoda jest przygotowana pod dane ze zbioru JOINED_DATA"""
     weights = [0.3, 0.2, 0.3, 0.2]
     values = [
@@ -75,8 +76,9 @@ def similarity(actor1: List[Any], actor2: List[Any]) -> float:
 
 
 def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> Tuple[List[str], List[float]]:
-    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data
-    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest funkcja similarity"""
+    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
+    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
+    funkcja similarity"""
     ids = []
     similarities = []
     for i in range(len(data)):
@@ -86,11 +88,11 @@ def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> Tuple[Li
     return ids, similarities
 
 
-def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5, include_self: bool = False) -> Tuple[List[str], List[float]]:
-    """metoda przyjmuje liste z id aktorów oraz listę z wartościami ich similarity
-    zwracana jest wybrana liczba pierwszych elementów z posortowanych list
-    aby dostać ranking (id) aktorów wystarczy wziąć pierwszą wartość zwracaną przez metodę"""
-    ids, values = sort_two_lists(ids, values, sort_list_index = 2, reverse = True)
+def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5, include_self: bool = False) -> Tuple[
+    List[str], List[float]]:
+    """metoda przyjmuje liste z id aktorów oraz listę z wartościami ich similarity;
+    zwracana jest wybrana liczba pierwszych elementów z posortowanych list"""
+    ids, values = sort_two_lists(ids, values, sort_list_index=2, reverse=True)
     if include_self:
         return ids[:top_length], values[:top_length]
     else:
@@ -98,16 +100,24 @@ def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5
 
 
 def replace_ids_with_names(data: pd.DataFrame, ids: List[str]) -> List[str]:
-    """metoda zamienia listę id aktorów, na listę ich imion
-    wartości odczytywane na podstawie ramki danych data"""
+    """metoda zamienia listę id aktorów, na listę ich imion;
+    wartości odczytywane są na podstawie ramki danych data"""
     return [find_actor(data, id)[10] for id in ids]
 
 
 def print_top_similiar(main_actor: str, names: List[str], values: List[float]) -> None:
-    """metoda wyświetla tekst o n najpodobniejszych do wybranego aktora aktorów
+    """metoda wyświetla tekst o n najpodobniejszych do wybranego aktora aktorów;
     metoda wyświetla imię głownego aktora, imiona najbardziej podbnych aktorów i ich similarity"""
     print(f"Najbardziej podobnymi do {main_actor} aktorami/aktorkami są w kolejności:")
     length = len(names)
     assert length == len(values), "listy z imionami i wartościami są różnych długości"
     for i in range(length):
         print(f'  - {names[i]} z similarity równym: {round(values[i], 3)}')
+
+
+def get_ranking(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5) -> List[str]:
+    """metoda dla ramki danych, id aktora oraz (opcjonalnie) długości rankingu, zwraca listę id aktorów najbardziej
+    podobnych do wybranego aktora"""
+    main_actor = prepare_pandas_row(find_actor(data, main_actor_id))
+    ids, similarities = similarity_one_vs_all(data, main_actor)
+    return select_top_similiar(ids, similarities, ranking_length)[0]
