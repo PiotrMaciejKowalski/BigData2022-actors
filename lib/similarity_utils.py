@@ -28,9 +28,12 @@ def iou(lista1: List[Any], lista2: List[Any]) -> float:
 def sort_two_lists(list1: List[Any], list2: List[Any], sort_list_index: int = 1, reverse: bool = True) -> Tuple[
     List[Any], List[Any]]:
     """metoda sortuje dwie listy równocześnie;
-    list1 jest sortowana po wartościach, a kolejność elementów w list2 zależy od sortowania list1;
-    indeks sortowanej listy mówi po wartościach której z dwóch list następuje sortowanie;
+    wybrana z dwóch list jest sortowana po wartościach, a elementy drugiej listy są zamienione miejscami w taki sposób by odpowiadały sortowaniu wykonanemu na poprzednio wybranej liście, np.
+    sort([5, 2, 4, 3, 1], ['Adam', 'Zosia', 'Krystyna', 'Karol', 'Tomek'])= 
+        =[1, 2, 3, 4, 5], ['Tomek', 'Zosia', 'Karol', 'Krystyna', 'Adam'];
+    indeks sortowanej listy decyduje, po elementach której z dwóch list następuje sortowanie po wartościach;
     reverse = True oznacza kolejność malejącą, a reverse = False oznacza kolejność rosnącą"""
+    assert len(list1) == len(list2), "listy są różnych długości"
     assert sort_list_index in [1, 2], "indeks sortowanej listy powinien być równy 1 albo 2"
     if sort_list_index == 1:
         zipped_lists = zip(list1, list2)
