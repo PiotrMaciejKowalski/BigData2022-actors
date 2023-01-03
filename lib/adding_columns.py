@@ -1,5 +1,6 @@
 from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.ml.feature import MinMaxScaler, VectorAssembler
 from pyspark.sql.functions import explode, col, count, avg
 
 from lib.pyspark_init import load_ratings_data
@@ -93,6 +94,12 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     data = data.join(data_with_ratings, on="nconst", how="left")
     return data
 
+def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
+    assembler = VectorAssembler(inputCols = "no_films", outputCol = "no_films_vect")
+    transformed = assembler.transform(data)
+    scaler = MinMaxScaler(inputCol = "no_films_vect", outputCol = "no_films_norm")
+    data = scaler.fit(transformed.select("no_films_vect")).transform(transformed)
+    return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
