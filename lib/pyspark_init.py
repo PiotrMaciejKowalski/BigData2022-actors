@@ -31,15 +31,14 @@ def load_data(spark: SparkSession) -> DataFrame:
         .option("delimiter", "\t")
         .csv("title.principals.csv")
     )
-    
-    for column in ['primaryProfession', 'knownForTitles']:
+
+    for column in ['knownForTitles']:
        df_name_basics = df_name_basics.withColumn(column, when(df_name_basics[column] == "\\N", None).otherwise(df_name_basics[column]))
-    for column in ['titleType', 'primaryTitle', 'originalTitle', 'genres']:
+    for column in ['titleType', 'originalTitle', 'genres']:
       df_title_basics = df_title_basics.withColumn(column, when(df_title_basics[column] == "\\N", None).otherwise(df_title_basics[column]))
-    for column in ['ordering', 'category', 'job', 'characters']:
-      df_title_principals = df_title_principals.withColumn(column, when(df_title_principals[column] == "\\N", None).otherwise(df_title_principals[column])
-    
-    # df_title_ratings=spark.read.option("header","true").option("delimiter","\t").csv('title.ratings.csv')
+    for column in ['ordering', 'category', 'characters']:
+      df_title_principals = df_title_principals.withColumn(column, when(df_title_principals[column] == "\\N", None).otherwise(df_title_principals[column]))
+      
     df_name_basics_selected = df_name_basics.filter(
         "primaryProfession like '%actor%' or primaryProfession like '%actress%'"
     )
@@ -96,7 +95,6 @@ def load_data(spark: SparkSession) -> DataFrame:
         first("primaryName").alias("primaryName"),
         first("knownForTitles").alias("knownForTitles"),
     )
-
     return data
 
 
