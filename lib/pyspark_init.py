@@ -19,7 +19,7 @@ def load_data(spark: SparkSession) -> DataFrame:
         .csv("name.basics.csv")
     )
     # df_title_akas=spark.read.option("header","true").option("delimiter", "\t").csv('title.akas.csv')
-    df_title_basic = (
+    df_title_basics = (
         spark.read.option("header", "true")
         .option("delimiter", "\t")
         .csv("title.basic.csv")
@@ -46,7 +46,7 @@ def load_data(spark: SparkSession) -> DataFrame:
         (df_title_principals.category == "actor")
         | (df_title_principals.category == "actress")
     )
-    df_title_basic_selected = df_title_basic.select(
+    df_title_basics_selected = df_title_basics.select(
         [
             "tconst",
             "titleType",
