@@ -99,10 +99,10 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
 def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
     unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType())
     for i in ['no_nominations_oscars', 'no_oscars', 'no_nominations_globes', 'no_globes', 'no_nominations_emmy', 'no_emmy', 'no_films', 'average_films_rating']:
-        assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
+        assembler = VectorAssembler().setInputCols(data.columns).setOutputCol("features")
         transformed = assembler.transform(data)
-        scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol=i + "_Scaled")
-        scalerModel =  scaler.fit(transformed.select(i + "_Vect"))
+        scaler = MinMaxScaler(inputCol = "features", outputCol = "scaledFeatures")
+        scalerModel =  scaler.fit(transformed.select("features"))
         scaledData = scalerModel.transform(transformed)
     return scaledData
 
