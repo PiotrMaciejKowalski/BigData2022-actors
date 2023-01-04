@@ -98,9 +98,10 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     return data
 
 def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
-    nor = Normalizer(1)
-    data = nor.transform(data['no_films'])
-    return data
+    no_films_min = data.select(min("no_films"))
+    no_films_max = data.select(max("no_films"))
+    no_films_norm = data.withColumn("no_films_norm", (data.no_films - no_films_min) / (no_films_max - no_films_min))
+    return no_films_norm
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
