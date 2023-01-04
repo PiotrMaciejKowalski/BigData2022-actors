@@ -7,7 +7,6 @@ from pyspark.sql.types import StructType, StringType, IntegerType, BooleanType, 
 from typing import List, Tuple, Dict, Any
 import numpy
 
-
 def create_spark_context() -> SparkSession:
     os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
     os.environ["SPARK_HOME"] = "/content/spark-3.3.1-bin-hadoop2"
@@ -32,7 +31,8 @@ def string_to_array(df, list_columns_names, p):
     list_columns.append(df.select(split(col(column_str), p).alias(column_str)))
     df=df.drop(column_str)
   for df_column in list_columns:
-    df_column=df_column.select("*").withColumn("id1", monotonically_increasing_id())
+    if not "id1" in df.columns:
+      df_column=df_column.select("*").withColumn("id1", monotonically_increasing_id())
     df=df.join(df_column, col("id")==col("id1"), 'leftouter')
     df=df.drop("id1")
   DF=df.drop("id")
@@ -88,11 +88,11 @@ def load_data(spark: SparkSession) -> DataFrame:
       .csv("title.principals.csv")
   )
 
-  for column in ['primaryProfession', 'knownForTitles']:
+  for column in ['knownForTitles']:
     df_name_basics = df_name_basics.withColumn(column, when(df_name_basics[column] == "\\N", None).otherwise(df_name_basics[column]))
-  for column in ['titleType', 'primaryTitle', 'originalTitle', 'genres']:
+  for column in ['titleType', 'originalTitle', 'genres']:
     df_title_basics = df_title_basics.withColumn(column, when(df_title_basics[column] == "\\N", None).otherwise(df_title_basics[column]))
-  for column in ['ordering', 'category', 'job', 'characters']:
+  for column in ['ordering', 'category', 'characters']:
     df_title_principals = df_title_principals.withColumn(column, when(df_title_principals[column] == "\\N", None).otherwise(df_title_principals[column]))
   
   df_title_basics = df_title_basics.withColumn("isAdult", df_title_basics["isAdult"].cast(BooleanType()))
