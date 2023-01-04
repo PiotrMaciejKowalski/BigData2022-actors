@@ -73,7 +73,7 @@ def load_data(spark: SparkSession) -> DataFrame:
       .csv("name.basics.csv")
   )
   # df_title_akas=spark.read.option("header","true").option("delimiter", "\t").csv('title.akas.csv')
-  df_title_basic = (
+  df_title_basics = (
       spark.read.option("header", "true")
       .option("delimiter", "\t")
       .schema(schemat_title_basics)
@@ -108,7 +108,7 @@ def load_data(spark: SparkSession) -> DataFrame:
       (df_title_principals.category == "actor")
       | (df_title_principals.category == "actress")
   )
-  df_title_basic_selected = df_title_basic.select(
+  df_title_basics_selected = df_title_basics.select(
       [
           "tconst",
           "titleType",
@@ -137,10 +137,10 @@ def load_data(spark: SparkSession) -> DataFrame:
       ),
   )
   print(
-      "df_title_basic_selected dataframe size: ",
-      (df_title_basic_selected.count(), len(df_title_basic_selected.columns)),
+      "df_title_basics_selected dataframe size: ",
+      (df_title_basics_selected.count(), len(df_title_basics_selected.columns)),
   )
-  data = df_title_basic_selected.join(df_title_principals_selected, "tconst", "right")
+  data = df_title_basics_selected.join(df_title_principals_selected, "tconst", "right")
   print("joined dataframe size: ", (data.count(), len(data.columns)))
   data = data.join(df_name_basics_selected, "nconst", "inner")
   print("joined dataframe size: ", (data.count(), len(data.columns)))
