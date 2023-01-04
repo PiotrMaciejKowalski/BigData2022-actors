@@ -3,6 +3,7 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import MinMaxScaler, VectorAssembler
 from pyspark.sql.types import DoubleType
+from pyspark.mllib.feature import Normalizer
 from pyspark.sql.functions import explode, col, count, avg, udf
 
 from lib.pyspark_init import load_ratings_data
@@ -97,14 +98,9 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     return data
 
 def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
-    unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType())
-    for i in ['no_nominations_oscars', 'no_oscars', 'no_nominations_globes', 'no_globes', 'no_nominations_emmy', 'no_emmy', 'no_films', 'average_films_rating']:
-        assembler = VectorAssembler().setInputCols(data.columns).setOutputCol("features")
-        transformed = assembler.transform(data)
-        scaler = MinMaxScaler(inputCol = "features", outputCol = "scaledFeatures")
-        scalerModel =  scaler.fit(transformed.select("features"))
-        scaledData = scalerModel.transform(transformed)
-    return scaledData
+    nor = Normalizer(1)
+    data = nor.transform(data['no_films'])
+    return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
