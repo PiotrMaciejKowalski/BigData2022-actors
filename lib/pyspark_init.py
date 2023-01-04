@@ -75,10 +75,10 @@ def load_data(spark: SparkSession) -> DataFrame:
         ),
     )
     print(
-        "df_title_basic_selected dataframe size: ",
-        (df_title_basic_selected.count(), len(df_title_basic_selected.columns)),
+        "df_title_basics_selected dataframe size: ",
+        (df_title_basics_selected.count(), len(df_title_basics_selected.columns)),
     )
-    data = df_title_basic_selected.join(df_title_principals_selected, "tconst", "right")
+    data = df_title_basics_selected.join(df_title_principals_selected, "tconst", "right")
     print("joined dataframe size: ", (data.count(), len(data.columns)))
     data = data.join(df_name_basics_selected, "nconst", "inner")
     print("joined dataframe size: ", (data.count(), len(data.columns)))
