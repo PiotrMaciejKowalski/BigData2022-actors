@@ -100,10 +100,11 @@ def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
     unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType())
     for i in ['no_nominations_oscars', 'no_oscars', 'no_nominations_globes', 'no_globes', 'no_nominations_emmy', 'no_emmy', 'no_films', 'average_films_rating']:
         assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
-        scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_Scaled")
-        pipeline = Pipeline(stages = [assembler, scaler])
-        data = pipeline.fit(data).transform(data).withColumn(i + "_Scaled", unlist(i + "_Scaled")).drop(i + "_Vect")
-    return data
+        transformed = assembler.transform(data)
+        scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol=i + "_Scaled")
+        scalerModel =  scaler.fit(transformed.select(i + "_Vect"))
+        scaledData = scalerModel.transform(transformed)
+    return scaledData
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
