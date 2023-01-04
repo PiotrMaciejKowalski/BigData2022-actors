@@ -159,7 +159,6 @@ def load_data(spark: SparkSession) -> DataFrame:
   )
   return data
 
-
 def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
   map_types = {
       str : StringType(),
