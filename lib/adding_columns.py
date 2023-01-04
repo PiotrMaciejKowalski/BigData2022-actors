@@ -95,6 +95,7 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     return data
 
 def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
+    list = data.columns['no_films']
     assembler = VectorAssembler().setInputCols\
             (data.no_films).setOutputCol("no_films_vect")
     transformed = assembler.transform(data)
