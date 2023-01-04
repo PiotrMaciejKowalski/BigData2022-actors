@@ -1,7 +1,9 @@
 from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.ml import Pipeline
 from pyspark.ml.feature import MinMaxScaler, VectorAssembler
-from pyspark.sql.functions import explode, col, count, avg
+from pyspark.sql.types import DoubleType
+from pyspark.sql.functions import explode, col, count, avg, udf
 
 from lib.pyspark_init import load_ratings_data
 
@@ -95,12 +97,12 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     return data
 
 def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
-    list = data.columns[32]
-    assembler = VectorAssembler().setInputCols\
-            (list).setOutputCol("no_films_vect")
-    transformed = assembler.transform(data)
-    scaler = MinMaxScaler(inputCol = "no_films_vect", outputCol = "no_films_norm")
-    data = scaler.fit(transformed.select("no_films_vect")).transform(transformed)
+    unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType())
+    for i in ['no_nominations_oscars', 'no_oscars', 'no_nominations_globes', 'no_globes', 'no_nominations_emmy', 'no_emmy', 'no_films', 'average_films_rating']:
+        assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
+        scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_Scaled")
+        pipeline = Pipeline(stages = [assembler, scaler])
+        data = pipeline.fit(data).transform(data).withColumn(i + "_Scaled", unlist(i + "_Scaled")).drop(i + "_Vect")
     return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
