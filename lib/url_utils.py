@@ -31,7 +31,7 @@ def try_get_link_to_imdb_image(actor_id: str) -> str:
     response = requests.get(url)
     soup = BeautifulSoup(response.content, "html.parser")
     image_info = str(soup.find("img", attrs={"class": "poster"}))
-    return extract_link_to_image(image_info)
+    return try_extract_link_to_image(image_info)
 
 
 udf_try_get_link_to_imdb_image = udf(try_get_link_to_imdb_image)
