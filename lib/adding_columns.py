@@ -3,7 +3,6 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import MinMaxScaler, VectorAssembler
 from pyspark.sql.types import DoubleType
-from pyspark.mllib.feature import Normalizer
 from pyspark.sql.functions import explode, col, count, avg, udf
 
 from lib.pyspark_init import load_ratings_data
@@ -27,6 +26,7 @@ def add_number_of_oscars(data: DataFrame) -> DataFrame:
 
     data = data.join(oscars_nominations, on="nconst", how="left")
     data = data.join(oscars_win, on="nconst", how="left")
+    data = data.na.fill(value = 0, subset = ["no_nominations_oscars", "no_oscars"])
     return data
 
 
@@ -48,6 +48,7 @@ def add_number_of_globes(data: DataFrame) -> DataFrame:
 
     data = data.join(globes_nominations, on="nconst", how="left")
     data = data.join(globes_win, on="nconst", how="left")
+    data = data.na.fill(value = 0, subset = ["no_nominations_globes", "no_globes"])
     return data
 
 
@@ -69,6 +70,7 @@ def add_number_of_emmy_awards(data: DataFrame) -> DataFrame:
 
     data = data.join(emmy_nominations, on="nconst", how="left")
     data = data.join(emmy_win, on="nconst", how="left")
+    data = data.na.fill(value = 0, subset = ["no_nominations_emmy", "no_emmy"])
     return data
 
 
@@ -97,11 +99,14 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     data = data.join(data_with_ratings, on="nconst", how="left")
     return data
 
-def add_normalized_number_of_oscars(data: DataFrame) -> DataFrame:
-    no_films_min = data.agg({'no_films': 'min'})
-    no_films_max = data.agg({'no_films': 'max'})
-    no_films_norm = data.withColumn("no_films_norm", (data.no_films - no_films_min) / (no_films_max - no_films_min))
-    return no_films_norm
+def add_normalized_columns(data: DataFrame) -> DataFrame:
+    unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType())
+    for i in ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]:
+        assembler = VectorAssembler(inputCols=[i],outputCol=i+"_Vect")
+        scaler = MinMaxScaler(inputCol=i+"_Vect", outputCol=i+"_norm")
+        pipeline = Pipeline(stages=[assembler, scaler])
+        data = pipeline.fit(data).transform(data).withColumn(i+"_norm", unlist(i+"_norm")).drop(i+"_Vect")
+    return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
@@ -109,4 +114,5 @@ def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
     data = add_average_films_ratings(spark, data)
+    data = add_normalized_columns(data)
     return data
