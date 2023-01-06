@@ -82,6 +82,7 @@ def add_number_of_films(data: DataFrame) -> DataFrame:
         .select(["nconst", "no_films"])
     )
     data = data.join(number_of_films, on="nconst", how="left")
+    data = data.na.fill(value = 0, subset = ["no_films"])
     return data
 
 
@@ -97,6 +98,7 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
         .select(["nconst", "average_films_rating"])
     )
     data = data.join(data_with_ratings, on="nconst", how="left")
+    data = data.na.fill(value = 0, subset = ["average_films_rating"])
     return data
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
