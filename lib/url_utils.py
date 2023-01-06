@@ -89,7 +89,7 @@ def lxml_get_link_to_imdb_image(actor_id: str) -> str:
         return None
 
 
-udf_alt_get_link_to_image = udf(lxml_get_link_to_imdb_image)
+udf_lxml_get_link_to_image = udf(lxml_get_link_to_imdb_image)
 # do ruuchomienia tej metody potrzebna będzie doinstalowanie cssselect za pomocą poniższego
 # !sudo pip3 install cssselect
 
@@ -103,7 +103,7 @@ def html_get_link_to_imdb_image(actor_id: str) -> str:
     return extract_link_to_image(image_info)
 
 
-udf_alt_get_link_to_image = udf(html_get_link_to_imdb_image)
+udf_html_get_link_to_image = udf(html_get_link_to_imdb_image)
 
 
 def pq_get_link_to_imdb_image(actor_id: str) -> str:
