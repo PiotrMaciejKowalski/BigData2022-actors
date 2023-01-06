@@ -113,6 +113,6 @@ def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_globes(data)
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
-    data = add_average_films_ratings(spark, data)
+    data = add_average_films_ratings(spark, data).cache()
     data = add_normalized_columns(data)
     return data
