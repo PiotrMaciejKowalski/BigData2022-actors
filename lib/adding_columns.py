@@ -93,6 +93,21 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     data = data.join(data_with_ratings, on="nconst", how="left")
     return data
 
+def add_top_type(data: DataFrame) -> DataFrame:
+        df2 = data.select('nconst', 
+                          explode(data.titleType).alias('titleType')
+                         )
+        df3 = df2.select('nconst', 
+                         explode(split(df2.titleType, ',')).alias('titleType')
+                        )
+        w = Window.partitionBy('nconst', 'titleType')
+        aggregated_table = df3.withColumn(
+            "count", count("*").over(w)).withColumn(
+            "rn", row_number().over(w.orderBy(desc("count")))).filter(
+            "rn = 1").groupBy('nconst').agg(first('titleType').alias('top_type')
+                                          )
+        data = data.join(aggregated_table, on="nconst", how="left")
+        return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
@@ -100,4 +115,5 @@ def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
     data = add_average_films_ratings(spark, data)
+    data = add_top_type(data)
     return data
