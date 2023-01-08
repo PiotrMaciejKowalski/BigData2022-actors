@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import explode, col, count, avg
+from pyspark.sql.functions import explode, split, col, count, avg, row_number, desc, first
+from pyspark.sql import Window
 
 from lib.pyspark_init import load_ratings_data
 
