@@ -110,6 +110,7 @@ class Normalized_column(Transformer):
     def copy(extra):
         defaultCopy(extra)
     def _transform(self, data):
+        unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana kolumny z wektora na Double
         return data.withColumn(self.inputCol, unlist(self.inputCol)).drop(self.inputCol + "_Vect")
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
@@ -117,7 +118,6 @@ def add_normalized_columns(data: DataFrame) -> DataFrame:
         raise Exception("Normalized columns are already in the dataframe.")
     else:
         to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
-        unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana kolumny z wektora na Double
         for i in to_be_normalized:
             assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
             scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_norm")
