@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.ml import Pipeline
+from pyspark.ml.pipeline import Transformer
 from pyspark.ml.feature import MinMaxScaler, VectorAssembler
 from pyspark.sql.types import DoubleType
 from pyspark.sql.functions import explode, col, count, avg, udf
