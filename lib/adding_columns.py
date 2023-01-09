@@ -101,6 +101,17 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     data = data.na.fill(value = 0, subset = ["average_films_rating"])
     return data
 
+class Normalized_column(Transformer):
+    def __init__(self, inputCol, outputCol = inputCol):
+        self.inputCol = inputCol
+        self.outputCol = outputCol
+    def this():
+        this(Identifiable.randomUID("normalizedcolumn))
+    def copy(extra):
+        defaultCopy(extra)
+    def _transform(self, data):
+        return data.withColumn(self.outputCol, unlist(self.inputCol)).drop(self.inputCol + "_Vect")
+
 def add_normalized_columns(data: DataFrame) -> DataFrame:
     to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
     if any(x in data.df.columns for x in to_be_normalized):
@@ -108,10 +119,11 @@ def add_normalized_columns(data: DataFrame) -> DataFrame:
     else:
         unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana kolumny z wektora na Double
         for i in to_be_normalized:
-            assembler = VectorAssembler(inputCols=[i],outputCol=i+"_Vect")
-            scaler = MinMaxScaler(inputCol=i+"_Vect", outputCol=i+"_norm")
-            pipeline = Pipeline(stages=[assembler, scaler])
-            data = pipeline.fit(data).transform(data).withColumn(i+"_norm", unlist(i+"_norm")).drop(i+"_Vect")
+            assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
+            scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_norm")
+            normalized_column = Normalized_column(inputCol = i)
+            pipeline = Pipeline(stages=[assembler, scaler, normalized_column])
+            data = pipeline.fit(data).transform(data)
         return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
