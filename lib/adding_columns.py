@@ -103,15 +103,14 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     return data
 
 class Normalized_column(Transformer):
-    def __init__(self, inputCol, outputCol = inputCol):
+    def __init__(self, inputCol):
         self.inputCol = inputCol
-        self.outputCol = outputCol
     def this():
         this(Identifiable.randomUID("normalizedcolumn"))
     def copy(extra):
         defaultCopy(extra)
     def _transform(self, data):
-        return data.withColumn(self.outputCol, unlist(self.inputCol)).drop(self.inputCol + "_Vect")
+        return data.withColumn(self.inputCol, unlist(self.inputCol)).drop(self.inputCol + "_Vect")
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
     to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
