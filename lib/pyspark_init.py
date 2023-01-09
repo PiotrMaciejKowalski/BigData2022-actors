@@ -2,8 +2,7 @@ import os
 import pyspark
 import findspark  # Czy na pewno potrzebny?
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import collect_list, first, min, max, split, explode
-from lib.url_utils import udf_get_link_to_image
+from pyspark.sql.functions import collect_list, first, min, max, split, explode, when
 
 
 def create_spark_context() -> SparkSession:
@@ -21,7 +20,7 @@ def load_data(spark: SparkSession) -> DataFrame:
         .csv("name.basics.csv")
     )
     # df_title_akas=spark.read.option("header","true").option("delimiter", "\t").csv('title.akas.csv')
-    df_title_basic = (
+    df_title_basics = (
         spark.read.option("header", "true")
         .option("delimiter", "\t")
         .csv("title.basic.csv")
@@ -33,7 +32,14 @@ def load_data(spark: SparkSession) -> DataFrame:
         .option("delimiter", "\t")
         .csv("title.principals.csv")
     )
-    # df_title_ratings=spark.read.option("header","true").option("delimiter","\t").csv('title.ratings.csv')
+
+    for column in ['knownForTitles']:
+       df_name_basics = df_name_basics.withColumn(column, when(df_name_basics[column] == "\\N", None).otherwise(df_name_basics[column]))
+    for column in ['titleType', 'originalTitle', 'genres']:
+      df_title_basics = df_title_basics.withColumn(column, when(df_title_basics[column] == "\\N", None).otherwise(df_title_basics[column]))
+    for column in ['ordering', 'category', 'characters']:
+      df_title_principals = df_title_principals.withColumn(column, when(df_title_principals[column] == "\\N", None).otherwise(df_title_principals[column]))
+      
     df_name_basics_selected = df_name_basics.filter(
         "primaryProfession like '%actor%' or primaryProfession like '%actress%'"
     )
@@ -41,7 +47,7 @@ def load_data(spark: SparkSession) -> DataFrame:
         (df_title_principals.category == "actor")
         | (df_title_principals.category == "actress")
     )
-    df_title_basic_selected = df_title_basic.select(
+    df_title_basics_selected = df_title_basics.select(
         [
             "tconst",
             "titleType",
@@ -70,10 +76,10 @@ def load_data(spark: SparkSession) -> DataFrame:
         ),
     )
     print(
-        "df_title_basic_selected dataframe size: ",
-        (df_title_basic_selected.count(), len(df_title_basic_selected.columns)),
+        "df_title_basics_selected dataframe size: ",
+        (df_title_basics_selected.count(), len(df_title_basics_selected.columns)),
     )
-    data = df_title_basic_selected.join(df_title_principals_selected, "tconst", "right")
+    data = df_title_basics_selected.join(df_title_principals_selected, "tconst", "right")
     print("joined dataframe size: ", (data.count(), len(data.columns)))
     data = data.join(df_name_basics_selected, "nconst", "inner")
     print("joined dataframe size: ", (data.count(), len(data.columns)))
