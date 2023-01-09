@@ -121,7 +121,7 @@ def add_normalized_columns(data: DataFrame) -> DataFrame:
         for i in to_be_normalized:
             assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
             scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_norm")
-            normalized_column = Normalized_column(inputCol = i)
+            normalized_column = Normalized_column(inputCol = i + "_norm")
             pipeline = Pipeline(stages=[assembler, scaler, normalized_column])
             data = pipeline.fit(data).transform(data)
         return data
