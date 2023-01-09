@@ -114,7 +114,7 @@ class Normalized_column(Transformer):
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
     to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
-    if any(x in data.df.columns for x in to_be_normalized):
+    if any(x in data.columns for x in to_be_normalized):
         raise Exception("Normalized columns are already in the dataframe.")
     else:
         unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana kolumny z wektora na Double
