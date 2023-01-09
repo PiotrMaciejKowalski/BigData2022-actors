@@ -106,7 +106,7 @@ class Normalized_column(Transformer):
         self.inputCol = inputCol
         self.outputCol = outputCol
     def this():
-        this(Identifiable.randomUID("normalizedcolumn))
+        this(Identifiable.randomUID("normalizedcolumn"))
     def copy(extra):
         defaultCopy(extra)
     def _transform(self, data):
