@@ -31,7 +31,7 @@ def string_to_array(df, list_columns_names, p):
     list_columns.append(df.select(split(col(column_str), p).alias(column_str)))
     df=df.drop(column_str)
   for df_column in list_columns:
-    assert "id1" in df.columns, "kolumna id1 już istnieje"
+    assert not "id1" in df.columns, "kolumna id1 już istnieje"
     df_column=df_column.select("*").withColumn("id1", monotonically_increasing_id())
     df=df.join(df_column, col("id")==col("id1"), 'leftouter')
     df=df.drop("id1")
