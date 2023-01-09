@@ -102,19 +102,23 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     return data
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
-    unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType())
-    for i in ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]:
-        assembler = VectorAssembler(inputCols=[i],outputCol=i+"_Vect")
-        scaler = MinMaxScaler(inputCol=i+"_Vect", outputCol=i+"_norm")
-        pipeline = Pipeline(stages=[assembler, scaler])
-        data = pipeline.fit(data).transform(data).withColumn(i+"_norm", unlist(i+"_norm")).drop(i+"_Vect")
-    return data
+    to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
+    if any(x in data.df.columns for x in to_be_normalized):
+        raise Exception("Normalized columns are already in the dataframe.")
+    else:
+        unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana kolumny z wektora na Double
+        for i in to_be_normalized:
+            assembler = VectorAssembler(inputCols=[i],outputCol=i+"_Vect")
+            scaler = MinMaxScaler(inputCol=i+"_Vect", outputCol=i+"_norm")
+            pipeline = Pipeline(stages=[assembler, scaler])
+            data = pipeline.fit(data).transform(data).withColumn(i+"_norm", unlist(i+"_norm")).drop(i+"_Vect")
+        return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
     data = add_number_of_globes(data)
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
-    data = add_average_films_ratings(spark, data).cache()
+    data = add_average_films_ratings(spark, data).cache() # .cache() przyspieszy działanie kolejnej funkcji - dane po wykonaniu funkcji add_average_films_ratings są zapamiętywane i przechowywane, dzięki czemu przy kolejnej funkcji wszystkie wcześniejsze operacje nie muszą być wykonywane przy każdej komendzie wymagającej tych danych
     data = add_normalized_columns(data)
     return data
