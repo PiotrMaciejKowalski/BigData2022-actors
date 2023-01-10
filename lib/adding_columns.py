@@ -111,7 +111,7 @@ class Normalized_column(Transformer):
         defaultCopy(extra)
     def _transform(self, data):
         unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana kolumny z wektora na Double
-        return data.withColumn(self.inputCol, unlist(self.inputCol)).drop(self.inputCol + "_Vect")
+        return data.withColumn(self.inputCol + "_norm", unlist(self.inputCol + "_norm")).drop(self.inputCol + "_Vect")
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
     if any(x in data.columns for x in ["no_nominations_oscars_norm", "no_oscars_norm", "no_nominations_globes_norm", "no_globes_norm", "no_nominations_emmy_norm", "no_emmy_norm", "no_films_norm", "average_films_rating_norm"]):
@@ -121,7 +121,7 @@ def add_normalized_columns(data: DataFrame) -> DataFrame:
         for i in to_be_normalized:
             assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
             scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_norm")
-            normalized_column = Normalized_column(inputCol = i + "_norm")
+            normalized_column = Normalized_column(inputCol = i)
             pipeline = Pipeline(stages=[assembler, scaler, normalized_column])
             data = pipeline.fit(data).transform(data)
         return data
