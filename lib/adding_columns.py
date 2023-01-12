@@ -110,7 +110,7 @@ class Normalized_column(Transformer):
     def copy(extra):
         defaultCopy(extra)
     def _transform(self, data):
-        unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana kolumny z wektora na Double
+        unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana typu wartości w kolumnie z wektora na Double
         return data.withColumn(self.inputCol + "_norm", unlist(self.inputCol + "_norm")).drop(self.inputCol + "_Vect")
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
