@@ -114,17 +114,15 @@ class Normalized_column(Transformer):
         return data.withColumn(self.inputCol + "_norm", unlist(self.inputCol + "_norm")).drop(self.inputCol + "_Vect")
 
 def add_normalized_columns(data: DataFrame) -> DataFrame:
-    if any(x in data.columns for x in ["no_nominations_oscars_norm", "no_oscars_norm", "no_nominations_globes_norm", "no_globes_norm", "no_nominations_emmy_norm", "no_emmy_norm", "no_films_norm", "average_films_rating_norm"]):
-        raise Exception("Normalized columns are already in the dataframe.")
-    else:
-        to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
-        for i in to_be_normalized:
-            assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
-            scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_norm")
-            normalized_column = Normalized_column(inputCol = i)
-            pipeline = Pipeline(stages=[assembler, scaler, normalized_column])
-            data = pipeline.fit(data).transform(data)
-        return data
+    assert (x not in data.columns for x in ["no_nominations_oscars_norm", "no_oscars_norm", "no_nominations_globes_norm", "no_globes_norm", "no_nominations_emmy_norm", "no_emmy_norm", "no_films_norm", "average_films_rating_norm"])
+    to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
+    for i in to_be_normalized:
+        assembler = VectorAssembler(inputCols = [i], outputCol = i + "_Vect")
+        scaler = MinMaxScaler(inputCol = i + "_Vect", outputCol = i + "_norm")
+        normalized_column = Normalized_column(inputCol = i)
+        pipeline = Pipeline(stages=[assembler, scaler, normalized_column])
+        data = pipeline.fit(data).transform(data)
+    return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
