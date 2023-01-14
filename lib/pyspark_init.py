@@ -157,6 +157,8 @@ def load_data(spark: SparkSession) -> DataFrame:
       first("primaryName").alias("primaryName"),
       first("knownForTitles").alias("knownForTitles"),
   )
+  for df in data:
+    df=df.distinct()
   return data 
 
 
