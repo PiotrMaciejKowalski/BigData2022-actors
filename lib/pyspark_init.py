@@ -7,6 +7,13 @@ from pyspark.sql.types import StructType, StringType, IntegerType, BooleanType, 
 from typing import List, Tuple, Dict, Any
 import numpy
 
+
+def create_spark_context() -> SparkSession:
+    os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+    os.environ["SPARK_HOME"] = "/content/spark-3.3.1-bin-hadoop2"
+    spark = SparkSession.builder.appName("Colab").getOrCreate()
+    return spark
+
 def create_spark_context() -> SparkSession:
     if "SPARK_HOME" not in os.environ:
         os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
@@ -39,7 +46,8 @@ def string_to_array(df, list_columns_names, p):
   DF=df.drop("id")
   return DF
 
-def load_data(spark: SparkSession) -> DataFrame:  
+
+def load_data(spark: SparkSession) -> DataFrame:
   map_types = {
       str : StringType(),
       int : IntegerType(),
@@ -57,16 +65,17 @@ def load_data(spark: SparkSession) -> DataFrame:
     'name_basics' : ['nconst','primaryName','birthYear','deathYear','primaryProfession','knownForTitles'],
   }
   column_type_collection = {
-      int : ['startYear', 'endYear', 'runtimeMinutes', 'birthYear', 'deathYear', 'isAdult'],
+      int : ['ordering', 'startYear', 'endYear', 'runtimeMinutes', 'birthYear', 'deathYear', 'isAdult'],
       str : [ 'titleType', 'primaryTitle', 'originalTitle', 'genres', 'category', 'job', 'characters', \
-            'primaryName', 'primaryProfession', 'knownForTitles'],
+            'primaryName', 'primaryProfession', 'knownForTitles', 'tconst', 'nconst'],
       bool : [],
       float : [],
       'date': []
   }
   Schematy=[schemat_title_basics, schemat_title_principals, schemat_name_basics] = [ 
   init_schema(column_conf[table], column_type_collection, map_types) 
-      for table in ( 'title_basics', 'principals', 'name_basics')]  
+      for table in ( 'title_basics', 'principals', 'name_basics')] 
+
   df_name_basics = (
       spark.read.option("header", "true")
       .option("delimiter", "\t")
@@ -77,7 +86,7 @@ def load_data(spark: SparkSession) -> DataFrame:
   df_title_basics = (
       spark.read.option("header", "true")
       .option("delimiter", "\t")
-      .schema(schemat_title_basics)
+      .schema(schemat_title_basics)     
       .csv("title.basic.csv")
   )
   # df_title_crew=spark.read.option("header","true").option("delimiter", "\t").csv('title.crew.csv')
@@ -95,12 +104,10 @@ def load_data(spark: SparkSession) -> DataFrame:
     df_title_basics = df_title_basics.withColumn(column, when(df_title_basics[column] == "\\N", None).otherwise(df_title_basics[column]))
   for column in ['ordering', 'category', 'characters']:
     df_title_principals = df_title_principals.withColumn(column, when(df_title_principals[column] == "\\N", None).otherwise(df_title_principals[column]))
-  
+
   df_title_basics = df_title_basics.withColumn("isAdult", df_title_basics["isAdult"].cast(BooleanType()))
 
-  df_name_basics=string_to_array(df_name_basics, ['primaryProfession', 'knownForTitles'], ',')
-  df_title_basics=string_to_array(df_title_basics, ['genres'], ',')
-
+  # df_title_ratings=spark.read.option("header","true").option("delimiter","\t").csv('title.ratings.csv')
   df_name_basics_selected = df_name_basics.filter(
       "primaryProfession like '%actor%' or primaryProfession like '%actress%'"
   )
@@ -137,9 +144,12 @@ def load_data(spark: SparkSession) -> DataFrame:
       ),
   )
   print(
-      "df_title_basics_selected dataframe size: ",
+      "df_title_basic_selected dataframe size: ",
       (df_title_basics_selected.count(), len(df_title_basics_selected.columns)),
   )
+
+  df_name_basics_selected=string_to_array(df_name_basics_selected, ['knownForTitles'], ',')
+
   data = df_title_basics_selected.join(df_title_principals_selected, "tconst", "right")
   print("joined dataframe size: ", (data.count(), len(data.columns)))
   data = data.join(df_name_basics_selected, "nconst", "inner")
@@ -157,9 +167,8 @@ def load_data(spark: SparkSession) -> DataFrame:
       first("primaryName").alias("primaryName"),
       first("knownForTitles").alias("knownForTitles"),
   )
-  for df in data:
-    df=df.distinct()
-  return data 
+  data=data.distinct()
+  return data
 
 
 def load_ratings_data(spark: SparkSession) -> DataFrame:
