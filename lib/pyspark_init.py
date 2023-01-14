@@ -6,6 +6,7 @@ from pyspark.sql.functions import collect_list, first, min, max, split, explode,
 from pyspark.sql.types import StructType, StringType, IntegerType, BooleanType, FloatType, TimestampType, DateType, ArrayType, MapType
 from typing import List, Tuple, Dict, Any
 import numpy
+from lib.adding_columns import udf_get_link_to_image
 
 
 def create_spark_context() -> SparkSession:
@@ -217,8 +218,9 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
   # tmdb_credits=spark.read.option("header","true").csv('tmdb_5000_credits.csv')
   # tmdb_movies=spark.read.option("header","true").csv('tmdb_5000_movies.csv')
 
-  emmy_awards=string_to_array(emmy_awards, ['staff'], ";")
-  
+  for df in (oscars, globe, emmy_awards):
+    df=df.distinct()
+
   oscars_selected = oscars.filter(
       (oscars.category.like("%ACTOR%")) | (oscars.category.like("%ACTRESS%"))
   )
@@ -367,9 +369,6 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
       collect_list("win_emmy").alias("win_emmy"),
   )
 
-  for df in data:
-    df=df.distinct()
   data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
   return data
-  # TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow
-  
+  # TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow 
