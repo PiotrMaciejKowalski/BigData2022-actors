@@ -14,7 +14,7 @@ def create_spark_context() -> SparkSession:
     spark = SparkSession.builder.appName("Colab").getOrCreate()
     return spark
 
-def init_schema(conf, column_type_collection):
+def init_schema(conf, column_type_collection, map_types):
   map = {}
   for pole in conf:
     for python_type, column_list in column_type_collection.items():
@@ -65,7 +65,7 @@ def load_data(spark: SparkSession) -> DataFrame:
       'date': []
   }
   Schematy=[schemat_title_basics, schemat_title_principals, schemat_name_basics] = [ 
-  init_schema(column_conf[table], column_type_collection) 
+  init_schema(column_conf[table], column_type_collection, map_types) 
       for table in ( 'title_basics', 'principals', 'name_basics')]  
   df_name_basics = (
       spark.read.option("header", "true")
@@ -194,7 +194,7 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
       'date': []
   }
   Schematy=[schemat_oscars, schemat_globe, schemat_emmy_awards] = [ 
-  init_schema(column_conf[table], column_type_collection) 
+  init_schema(column_conf[table], column_type_collection, map_types) 
       for table in ( 'oscars', 'globe', 'emmy_awards')]   
 
   oscars = spark.read.option("header", "true").schema(schemat_oscars).csv("the_oscar_award.csv")
