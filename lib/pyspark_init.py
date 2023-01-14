@@ -10,12 +10,6 @@ from lib.adding_columns import udf_get_link_to_image
 
 
 def create_spark_context() -> SparkSession:
-    os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
-    os.environ["SPARK_HOME"] = "/content/spark-3.3.1-bin-hadoop2"
-    spark = SparkSession.builder.appName("Colab").getOrCreate()
-    return spark
-
-def create_spark_context() -> SparkSession:
     if "SPARK_HOME" not in os.environ:
         os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
         os.environ["SPARK_HOME"] = "/content/spark-3.3.1-bin-hadoop2"
