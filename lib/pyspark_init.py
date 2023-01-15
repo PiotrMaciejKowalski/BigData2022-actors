@@ -6,6 +6,8 @@ from pyspark.sql.functions import collect_list, first, min, max, split, explode,
 from pyspark.sql.types import StructType, StringType, IntegerType, BooleanType, FloatType, TimestampType, DateType, ArrayType, MapType
 from typing import List, Tuple, Dict, Any
 import numpy
+#from lib.adding_columns import udf_get_link_to_image
+
 
 def create_spark_context() -> SparkSession:
     if "SPARK_HOME" not in os.environ:
@@ -14,7 +16,7 @@ def create_spark_context() -> SparkSession:
     spark = SparkSession.builder.appName("Colab").getOrCreate()
     return spark
 
-def init_schema(conf, column_type_collection):
+def init_schema(conf, column_type_collection, map_types):
   map = {}
   for pole in conf:
     for python_type, column_list in column_type_collection.items():
@@ -39,7 +41,8 @@ def string_to_array(df, list_columns_names, p):
   DF=df.drop("id")
   return DF
 
-def load_data(spark: SparkSession) -> DataFrame:  
+
+def load_data(spark: SparkSession) -> DataFrame:
   map_types = {
       str : StringType(),
       int : IntegerType(),
@@ -57,16 +60,17 @@ def load_data(spark: SparkSession) -> DataFrame:
     'name_basics' : ['nconst','primaryName','birthYear','deathYear','primaryProfession','knownForTitles'],
   }
   column_type_collection = {
-      int : ['startYear', 'endYear', 'runtimeMinutes', 'birthYear', 'deathYear', 'isAdult'],
+      int : ['ordering', 'startYear', 'endYear', 'runtimeMinutes', 'birthYear', 'deathYear', 'isAdult'],
       str : [ 'titleType', 'primaryTitle', 'originalTitle', 'genres', 'category', 'job', 'characters', \
-            'primaryName', 'primaryProfession', 'knownForTitles'],
+            'primaryName', 'primaryProfession', 'knownForTitles', 'tconst', 'nconst'],
       bool : [],
       float : [],
       'date': []
   }
   Schematy=[schemat_title_basics, schemat_title_principals, schemat_name_basics] = [ 
-  init_schema(column_conf[table], column_type_collection) 
-      for table in ( 'title_basics', 'principals', 'name_basics')]  
+  init_schema(column_conf[table], column_type_collection, map_types) 
+      for table in ( 'title_basics', 'principals', 'name_basics')] 
+
   df_name_basics = (
       spark.read.option("header", "true")
       .option("delimiter", "\t")
@@ -77,7 +81,7 @@ def load_data(spark: SparkSession) -> DataFrame:
   df_title_basics = (
       spark.read.option("header", "true")
       .option("delimiter", "\t")
-      .schema(schemat_title_basics)
+      .schema(schemat_title_basics)     
       .csv("title.basic.csv")
   )
   # df_title_crew=spark.read.option("header","true").option("delimiter", "\t").csv('title.crew.csv')
@@ -88,6 +92,8 @@ def load_data(spark: SparkSession) -> DataFrame:
       .schema(schemat_title_principals)
       .csv("title.principals.csv")
   )
+  for df in (df_name_basics, df_title_basics, df_title_principals):
+    df=df.distinct()
 
   for column in ['knownForTitles']:
     df_name_basics = df_name_basics.withColumn(column, when(df_name_basics[column] == "\\N", None).otherwise(df_name_basics[column]))
@@ -95,12 +101,10 @@ def load_data(spark: SparkSession) -> DataFrame:
     df_title_basics = df_title_basics.withColumn(column, when(df_title_basics[column] == "\\N", None).otherwise(df_title_basics[column]))
   for column in ['ordering', 'category', 'characters']:
     df_title_principals = df_title_principals.withColumn(column, when(df_title_principals[column] == "\\N", None).otherwise(df_title_principals[column]))
-  
+
   df_title_basics = df_title_basics.withColumn("isAdult", df_title_basics["isAdult"].cast(BooleanType()))
 
-  df_name_basics=string_to_array(df_name_basics, ['primaryProfession', 'knownForTitles'], ',')
-  df_title_basics=string_to_array(df_title_basics, ['genres'], ',')
-
+  # df_title_ratings=spark.read.option("header","true").option("delimiter","\t").csv('title.ratings.csv')
   df_name_basics_selected = df_name_basics.filter(
       "primaryProfession like '%actor%' or primaryProfession like '%actress%'"
   )
@@ -137,9 +141,12 @@ def load_data(spark: SparkSession) -> DataFrame:
       ),
   )
   print(
-      "df_title_basics_selected dataframe size: ",
+      "df_title_basic_selected dataframe size: ",
       (df_title_basics_selected.count(), len(df_title_basics_selected.columns)),
   )
+
+  df_name_basics_selected=string_to_array(df_name_basics_selected, ['knownForTitles'], ',')
+
   data = df_title_basics_selected.join(df_title_principals_selected, "tconst", "right")
   print("joined dataframe size: ", (data.count(), len(data.columns)))
   data = data.join(df_name_basics_selected, "nconst", "inner")
@@ -157,7 +164,7 @@ def load_data(spark: SparkSession) -> DataFrame:
       first("primaryName").alias("primaryName"),
       first("knownForTitles").alias("knownForTitles"),
   )
-  return data 
+  return data
 
 
 def load_ratings_data(spark: SparkSession) -> DataFrame:
@@ -188,13 +195,13 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
   }
   column_type_collection = {
       int : ['year_award', 'year_film', 'year_ceremony', 'ceremony', 'year'],
-      str : ['category', 'nominee', 'film', 'name', 'staff','company', 'producer'],
+      str : ['id', 'category', 'nominee', 'film', 'name', 'staff','company', 'producer'],
       bool : ['win', 'winner'],
       float : [],
       'date': []
   }
-  Schematy=[schemat_oscars, schemat_globe, schemat_emmy_awards] = [ 
-  init_schema(column_conf[table], column_type_collection) 
+  [schemat_oscars, schemat_globe, schemat_emmy_awards] = [ 
+  init_schema(column_conf[table], column_type_collection, map_types) 
       for table in ( 'oscars', 'globe', 'emmy_awards')]   
 
   oscars = spark.read.option("header", "true").schema(schemat_oscars).csv("the_oscar_award.csv")
@@ -206,8 +213,9 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
   # tmdb_credits=spark.read.option("header","true").csv('tmdb_5000_credits.csv')
   # tmdb_movies=spark.read.option("header","true").csv('tmdb_5000_movies.csv')
 
-  emmy_awards=string_to_array(emmy_awards, ['staff'], ";")
-  
+  for df in (oscars, globe, emmy_awards):
+    df=df.distinct()
+
   oscars_selected = oscars.filter(
       (oscars.category.like("%ACTOR%")) | (oscars.category.like("%ACTRESS%"))
   )
@@ -247,9 +255,7 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
   emmy_awards_selected = emmy_awards_selected.withColumn(
       "staff", explode(split("staff", ", "))
   )
-  emmy_awards_selected = emmy_awards_selected.groupby(
-      "nominee", "id", "year", "category", "company", "producer", "win"
-  ).agg(
+  emmy_awards_selected = emmy_awards_selected.groupby("nominee", "id", "year", "category", "company", "producer", "win").agg(
       first("staff").alias("staff"),
   )
   oscars_selected = oscars.select(
@@ -280,44 +286,14 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
       .withColumnRenamed("win", "win_emmy")
   )
   data = data.join(oscars_selected, data.primaryName == oscars_selected.name, "left")
-  data = data.groupby(
-      "nconst",
-      "tconst",
-      "titleType",
-      "originalTitle",
-      "isAdult",
-      "startYear",
-      "endYear",
-      "genres",
-      "category",
-      "characters",
-      "primaryName",
-      "knownForTitles",
-  ).agg(
+  data = data.groupby("nconst", "tconst", "titleType", "originalTitle", "isAdult", "startYear", "endYear", "genres", "category", "characters", "primaryName", "knownForTitles").agg(
       collect_list("year_oscars").alias("year_oscars"),
       first("category_oscars").alias("category_oscars"),
       collect_list("film_oscars").alias("film_oscars"),
       collect_list("winner_oscars").alias("winner_oscars"),
   )
   data = data.join(globe_selected, data.primaryName == globe_selected.nominee, "left")
-  data = data.groupby(
-      "nconst",
-      "tconst",
-      "titleType",
-      "originalTitle",
-      "isAdult",
-      "startYear",
-      "endYear",
-      "genres",
-      "category",
-      "characters",
-      "primaryName",
-      "knownForTitles",
-      "year_oscars",
-      "category_oscars",
-      "film_oscars",
-      "winner_oscars",
-  ).agg(
+  data = data.groupby("nconst", "tconst", "titleType", "originalTitle", "isAdult", "startYear", "endYear", "genres", "category", "characters", "primaryName", "knownForTitles", "year_oscars", "category_oscars", "film_oscars", "winner_oscars").agg(
       collect_list("year_globes").alias("year_globes"),
       collect_list("category_globes").alias("category_globes"),
       collect_list("film_globes").alias("film_globes"),
@@ -326,28 +302,7 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
   data = data.join(
       emmy_awards_selected, data.primaryName == emmy_awards_selected.staff, "left"
   )
-  data = data.groupby(
-      "nconst",
-      "tconst",
-      "titleType",
-      "originalTitle",
-      "isAdult",
-      "startYear",
-      "endYear",
-      "genres",
-      "category",
-      "characters",
-      "primaryName",
-      "knownForTitles",
-      "year_oscars",
-      "category_oscars",
-      "film_oscars",
-      "winner_oscars",
-      "year_globes",
-      "category_globes",
-      "film_globes",
-      "win_globes",
-  ).agg(
+  data = data.groupby("nconst", "tconst", "titleType", "originalTitle", "isAdult", "startYear", "endYear", "genres", "category", "characters", "primaryName", "knownForTitles", "year_oscars", "category_oscars", "film_oscars", "winner_oscars", "year_globes", "category_globes", "film_globes", "win_globes").agg(
       collect_list("year_emmy").alias("year_emmy"),
       collect_list("category_emmy").alias("category_emmy"),
       collect_list("nominee_emmy").alias("nominee_emmy"),
@@ -356,9 +311,6 @@ def add_kaggle_data(spark: SparkSession, data: DataFrame) -> DataFrame:
       collect_list("win_emmy").alias("win_emmy"),
   )
 
-  for df in data:
-    df=df.distinct()
-  data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
+#  data = data.withColumn("image_url", udf_get_link_to_image(data.nconst))
+# TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow
   return data
-  # TODO uruchomic te metody i wygenerowac nowy plik z danymi, gdy będzie potrzebna kolumna z linkami URL do zdjec aktorow
-  
