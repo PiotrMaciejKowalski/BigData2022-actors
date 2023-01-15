@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import explode, col, count, avg
+from pyspark.sql.functions import explode, col, count, avg, array_contains, array
 
 from lib.pyspark_init import load_ratings_data
 
@@ -93,6 +93,14 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     data = data.join(data_with_ratings, on="nconst", how="left")
     return data
 
+def genres_code(data: DataFrame) -> DataFrame:
+    genres = ('Crime', 'Romance', 'Thriller', 'Adventure', 'Drama', 'War', 'Documentary', 'Reality-TV', 'Family', 'Fantasy', 'Game-Show', 'Adult', 'History', 'Mystery', 'Experimental', 'Musical', 'Animation', 'Music', 'Film-Noir', 'Short', 'Horror', 'Western', 'Biography', 'Comedy', 'Action', 'Sport', 'Talk-Show', 'Sci-Fi', 'News')
+    genres_list = list(genres)
+    for x in genres_list:
+        data = data.withColumn(x, array_contains("genres", x).cast("int"))
+    data = data.withColumn("genres_code", array(genres_list))
+    data = data.drop(*genres)
+    return data
 
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
@@ -100,4 +108,5 @@ def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
     data = add_average_films_ratings(spark, data)
+    data = genres_code(data)
     return data
