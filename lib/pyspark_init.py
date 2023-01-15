@@ -41,7 +41,6 @@ def string_to_array(df, list_columns_names, p):
   DF=df.drop("id")
   return DF
 
-
 def load_data(spark: SparkSession) -> DataFrame:
   map_types = {
       str : StringType(),
@@ -92,6 +91,8 @@ def load_data(spark: SparkSession) -> DataFrame:
       .schema(schemat_title_principals)
       .csv("title.principals.csv")
   )
+  for df in (df_name_basics, df_title_basics, df_title_principals):
+    df=df.distinct()
 
   for column in ['knownForTitles']:
     df_name_basics = df_name_basics.withColumn(column, when(df_name_basics[column] == "\\N", None).otherwise(df_name_basics[column]))
@@ -162,7 +163,6 @@ def load_data(spark: SparkSession) -> DataFrame:
       first("primaryName").alias("primaryName"),
       first("knownForTitles").alias("knownForTitles"),
   )
-  data=data.distinct()
   return data
 
 
