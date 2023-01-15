@@ -41,6 +41,7 @@ def string_to_array(df, list_columns_names, p):
   DF=df.drop("id")
   return DF
 
+
 def load_data(spark: SparkSession) -> DataFrame:
   map_types = {
       str : StringType(),
