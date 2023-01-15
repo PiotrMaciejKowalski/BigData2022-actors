@@ -1,5 +1,6 @@
 from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
+from pyspark.ml.feature import StringIndexer
 from pyspark.sql.functions import explode, col, count, avg, array_contains, array
 
 from lib.pyspark_init import load_ratings_data
@@ -102,6 +103,21 @@ def genres_code(data: DataFrame) -> DataFrame:
     data = data.drop(*genres)
     return data
 
+def types_code(data: DataFrame) -> DataFrame:
+    types = ('tvSeries', 'tvMiniSeries', 'tvMovie', 'tvEpisode', 'movie', 'tvSpecial', 'video', 'videoGame', 'tvShort', 'short', 'tvPilot')
+    types_list = list(types)
+    for x in types_list:
+        data = data.withColumn(x, array_contains("titleType", x).cast("int"))
+    data = data.withColumn("types_code", array(types_list))
+    data = data.drop(*types)
+    return data
+
+def category_code(data: DataFrame) -> DataFrame:
+    indexer = StringIndexer(inputCol='category', outputCol='category_code')
+    indexer_fitted = indexer.fit(data)
+    data = indexer_fitted.transform(data)
+    return data
+
 def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_oscars(data)
     data = add_number_of_globes(data)
@@ -109,4 +125,6 @@ def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_films(data)
     data = add_average_films_ratings(spark, data)
     data = genres_code(data)
+    data = types_code(data)
+    data = category_code(data)
     return data
