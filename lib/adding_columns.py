@@ -95,6 +95,7 @@ def add_average_films_ratings(spark: SparkSession, data: DataFrame) -> DataFrame
     return data
 
 def genres_code(data: DataFrame) -> DataFrame:
+    assert "genres_code" not in data.columns
     genres = ('Crime', 'Romance', 'Thriller', 'Adventure', 'Drama', 'War', 'Documentary', 'Reality-TV', 'Family', 'Fantasy', 'Game-Show', 'Adult', 'History', 'Mystery', 'Experimental', 'Musical', 'Animation', 'Music', 'Film-Noir', 'Short', 'Horror', 'Western', 'Biography', 'Comedy', 'Action', 'Sport', 'Talk-Show', 'Sci-Fi', 'News')
     genres_list = list(genres)
     for x in genres_list:
@@ -104,6 +105,7 @@ def genres_code(data: DataFrame) -> DataFrame:
     return data
 
 def types_code(data: DataFrame) -> DataFrame:
+    assert "types_code" not in data.columns
     types = ('tvSeries', 'tvMiniSeries', 'tvMovie', 'tvEpisode', 'movie', 'tvSpecial', 'video', 'videoGame', 'tvShort', 'short', 'tvPilot')
     types_list = list(types)
     for x in types_list:
