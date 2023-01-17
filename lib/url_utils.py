@@ -33,7 +33,6 @@ udf_try_get_link_to_imdb_image = udf(try_get_link_to_imdb_image)
 
 def extract_link_to_image(text: str) -> str:
     """metoda zwraca tekst znajdujący się pomiędzy sekwencjami znaków 'src="' oraz '._'"""
-    text = str(text)
     first = 'src="'
     last = "._"
     start = text.rindex(first) + len(first)
