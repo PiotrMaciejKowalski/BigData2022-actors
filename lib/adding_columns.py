@@ -115,6 +115,7 @@ def types_code(data: DataFrame) -> DataFrame:
     return data
 
 def category_code(data: DataFrame) -> DataFrame:
+    assert "category_code" not in data.columns
     indexer = StringIndexer(inputCol='category', outputCol='category_code')
     indexer_fitted = indexer.fit(data)
     data = indexer_fitted.transform(data)
