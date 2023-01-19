@@ -1,18 +1,11 @@
 from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.ml.feature import StringIndexer
-from pyspark.sql.functions import explode, col, split, count, avg, array_contains, array, row_number, desc, first
-from pyspark.sql import Window
-
-from lib.pyspark_init import load_ratings_data
-
-from pandas import DataFrame
-from pyspark.sql import SparkSession, DataFrame
 from pyspark.ml import Pipeline
 from pyspark.ml.pipeline import Transformer
 from pyspark.ml.feature import MinMaxScaler, VectorAssembler
 from pyspark.sql.types import DoubleType
-from pyspark.sql.functions import explode, col, count, avg, udf
+from pyspark.sql.functions import explode, col, count, avg, udf, split,  array_contains, array, row_number, desc, first
 
 from lib.pyspark_init import load_ratings_data
 
@@ -158,7 +151,7 @@ def category_code(data: DataFrame) -> DataFrame:
     indexer_fitted = indexer.fit(data)
     data = indexer_fitted.transform(data)
     return data
-
+    
 def add_top_type(data: DataFrame) -> DataFrame:
         df2 = data.select('nconst', explode(data.titleType).alias('titleType'))
         df3 = df2.select('nconst', explode(split(df2.titleType, ',')).alias('titleType'))
