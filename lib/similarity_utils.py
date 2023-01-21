@@ -140,7 +140,8 @@ def get_ranking(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5)
     return select_top_similiar(ids, similarities, ranking_length)[0]
 
 
-def insert_main_actor_column_values(data: pd.DataFrame, column_name: str, value: List[Any]) -> pd.DataFrame:
+def insert_main_actor_column_values(data: pd.DataFrame, column_name: str, value: Any) -> pd.DataFrame:
+    """metoda do wskazanej rmaki danych dodaje kolumnę o nazwie column_name_main o wartościach wskazanych w argumencie value"""
     for index, row in data.iterrows():
       data.at[index, column_name + "_main"] = value
     return data
@@ -164,9 +165,13 @@ def similarity_pandas(row: pd.DataFrame) -> float:
 
 
 def similarity_one_vs_all_pandas(data: pd.DataFrame, main_actor_values: pd.DataFrame) -> Tuple[List[str], List[float]]:
-    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
-    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
-    funkcja similarity"""
+    """metoda liczy similarity pomiędzy aktorem dla którego dane są dostarczone w postaci pandasowego wiersza, oraz
+    wszystkimi aktorami obecnymi w ramce danych data;
+    w pojedynczym wierszu znajdują się informacje o jednym aktorze pierwotnie znajdującym się w wierszu, oraz obok tych
+    danych doklejane są dane o aktorze względem którego liczone jest similarity;
+    dla tak zbudowanych wierszy, do całej ramki danych data przykładana jest metoda similarity_pandas która automatycznie
+    dla każdego wiersza liczy wartość similarity pomiędzy pierwotnie istniejącym w wierszu aktorem, a aktorem wskazanym
+    w argumencie main_actor_values"""
     columns = ["tconst", "titleType", "genres", "category"]
     main_columns = []
     for column in columns:
