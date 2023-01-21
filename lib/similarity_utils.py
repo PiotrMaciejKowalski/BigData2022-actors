@@ -64,8 +64,8 @@ def prepare_pandas_row(pandas_row: pd.DataFrame) -> List[Any]:
 def similarity(actor1: List[Any], actor2: List[Any], reduced_dataset: bool = False) -> float:
     """metoda licząca similarity pomiędzy dwoma aktorami;
     jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1];
-    paraametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
-    danych na którym będziemy liczyć similarity ograniczamy do poniższych 4 kolumn:
+    parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
+    danych na którym liczymy similarity ograniczamy do poniższych 4 kolumn:
     "nconst", "tconst", "titleType", "genres", "category"
     to należy zmienić wartość parametru 'reduced_dataset' na True;
     metoda jest przygotowana pod dane ze zbioru JOINED_DATA"""
@@ -94,8 +94,8 @@ def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any], reduced_dat
     """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
     każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
     funkcja similarity
-    paraametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
-    danych na którym będziemy liczyć similarity ograniczamy do poniższych 4 kolumn:
+    parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
+    danych na którym liczymy similarity ograniczamy do poniższych 4 kolumn:
     "nconst", "tconst", "titleType", "genres", "category"
     to należy zmienić wartość parametru 'reduced_dataset' na True;"""
     actors = data.apply(prepare_pandas_row, axis=1)
