@@ -61,34 +61,40 @@ def prepare_pandas_row(pandas_row: pd.DataFrame) -> List[Any]:
     return p_list
 
 
-def similarity(actor1: List[Any], actor2: List[Any]) -> float:
+def similarity(actor1: List[Any], actor2: List[Any], reduced_dataset: bool = False) -> float:
     """metoda licząca similarity pomiędzy dwoma aktorami;
     jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1];
     metoda jest przygotowana pod dane ze zbioru JOINED_DATA"""
     weights = [0.3, 0.2, 0.3, 0.2]
-    values = [
-        iou(actor1[1], actor2[1]),  # similarity ze względu na ilość wspólnych filmów
-        iou(actor1[2], actor2[2]),  # similarity ze względu na rodzaj granych produkcji
-        iou(actor1[7], actor2[7]),  # similarity ze względu na gatunek granych produkcji
-        1 if actor1[8] == actor2[8] else 0  # similarity ze względu na tę samą płeć
-    ]
+    if reduced_dataset:
+        values = [
+            iou(actor1[1], actor2[1]),  # similarity ze względu na ilość wspólnych filmów
+            iou(actor1[2], actor2[2]),  # similarity ze względu na rodzaj granych produkcji
+            iou(actor1[3], actor2[3]),  # similarity ze względu na gatunek granych produkcji
+            1 if actor1[4] == actor2[4] else 0  # similarity ze względu na tę samą płeć
+        ]
+    else:
+        values = [
+            iou(actor1[1], actor2[1]),  # similarity ze względu na ilość wspólnych filmów
+            iou(actor1[2], actor2[2]),  # similarity ze względu na rodzaj granych produkcji
+            iou(actor1[7], actor2[7]),  # similarity ze względu na gatunek granych produkcji
+            1 if actor1[8] == actor2[8] else 0  # similarity ze względu na tę samą płeć
+        ]
     length = len(weights)
     assert length == len(values)
     # TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
     return sum(weights[i] * values[i] for i in range(length)) * 2 - 1
 
 
-def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any]) -> Tuple[List[str], List[float]]:
+def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any], reduced_dataset: bool = False) -> Tuple[List[str], List[float]]:
     """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
     każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
     funkcja similarity"""
-    ids = []
+    actors = data.apply(prepare_pandas_row, axis=1)
     similarities = []
-    for i in range(len(data)):
-        actor = prepare_pandas_row(data.loc[i].values.tolist())
-        ids.append(actor[0])
-        similarities.append(similarity(main_actor, actor[0:]))
-    return ids, similarities
+    for actor in actors:
+        similarities.append(similarity(main_actor, actor, reduced_dataset))
+    return list(data["nconst"]), similarities
 
 
 def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5, include_self: bool = False) -> Tuple[
@@ -124,3 +130,40 @@ def get_ranking(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5)
     main_actor = prepare_pandas_row(find_actor(data, main_actor_id))
     ids, similarities = similarity_one_vs_all(data, main_actor)
     return select_top_similiar(ids, similarities, ranking_length)[0]
+
+
+def insert_main_actor_column_values(data: pd.DataFrame, column_name: str, value: List[Any]) -> pd.DataFrame:
+    for index, row in data.iterrows():
+      data.at[index, column_name + "_main"] = value
+    return data
+
+
+def similarity_pandas(row: pd.DataFrame) -> float:
+    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
+    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
+    funkcja similarity"""
+    weights = [0.3, 0.2, 0.3, 0.2]
+    values = [
+        iou(list(row["tconst"]), list(row["tconst_main"])),  # similarity ze względu na ilość wspólnych filmów
+        iou(list(row["titleType"]), list(row["titleType_main"])),  # similarity ze względu na rodzaj granych produkcji
+        iou(list(row["genres"]), list(row["genres_main"])),  # similarity ze względu na gatunek granych produkcji
+        1 if row["category"] == row["category_main"] else 0  # similarity ze względu na tę samą płeć
+    ]
+    length = len(weights)
+    assert length == len(values)
+    # TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
+    return sum(weights[i] * values[i] for i in range(length)) * 2 - 1
+
+
+def similarity_one_vs_all_pandas(data: pd.DataFrame, main_actor_values: pd.DataFrame) -> Tuple[List[str], List[float]]:
+    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
+    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
+    funkcja similarity"""
+    columns = ["tconst", "titleType", "genres", "category"]
+    main_columns = []
+    for column in columns:
+        main_columns.append(column + "_main")
+        data = insert_main_actor_column_values(data, column, main_actor_values[column])
+    similarities = list(data.apply(similarity_pandas, axis=1))
+    data.drop(columns = main_columns, axis=1)
+    return list(data["nconst"]), similarities
