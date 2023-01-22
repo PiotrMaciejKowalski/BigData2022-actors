@@ -148,9 +148,11 @@ def insert_main_actor_column_values(data: pd.DataFrame, column_name: str, value:
 
 
 def similarity_pandas(row: pd.DataFrame) -> float:
-    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
-    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
-    funkcja similarity"""
+    """metoda liczy similarity pomiędzy dwoma aktorami znadjującymi się w tym samym wierszu;
+    aby dodać do wyciągniętego z załadowanych przez nas danych aktora (który jest podany jako pd.DataFrame) kolumn z wartościami aktora
+    względem którego będzie liczone similarity, należy użyć metody 'insert_main_actor_column_values' na poniższych kolumnach:
+    "tconst", "titleType", "genres", "category"
+    metoda nie tworzy tych kolumn automatycznie"""
     weights = [0.3, 0.2, 0.3, 0.2]
     values = [
         iou(list(row["tconst"]), list(row["tconst_main"])),  # similarity ze względu na ilość wspólnych filmów
