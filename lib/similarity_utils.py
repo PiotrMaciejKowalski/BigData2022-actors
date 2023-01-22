@@ -116,13 +116,12 @@ def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5
         return ids[1:top_length + 1], values[1:top_length + 1]
 
 
-def replace_ids_with_names(data: pd.DataFrame, ids: List[str], reduced_dataset: bool = False) -> List[str]:
+def replace_ids_with_names(data: pd.DataFrame, ids: List[str], name_column_number: int = 10) -> List[str]:
     """metoda zamienia listę id aktorów, na listę ich imion;
-    wartości odczytywane są na podstawie ramki danych data"""
-    if reduced_dataset:
-        return [find_actor(data, id)[5] for id in ids]
-    else:
-        return [find_actor(data, id)[10] for id in ids]
+    wartości odczytywane są na podstawie ramki danych data
+    dla metody similarity parametr 'name_column_number' powinien wynosić 5 (zredukowany dataset) albo 10 (pełen dataset),
+    a dla similari_new parametr 'name_column_number' powinien wynosić 3 (zredukowany dataset) albo 10 (pełen dataset)"""
+    return [find_actor(data, id)[name_column_number] for id in ids]
 
 
 def print_top_similiar(main_actor: str, names: List[str], values: List[float]) -> None:
@@ -214,7 +213,7 @@ def similarity_new(actor1: List[Any], actor2: List[Any], reduced_dataset: bool =
     
     to należy zmienić wartość parametru 'reduced_dataset' na True;
     metoda jest przygotowana pod dane ze zbiorów treningowego, testowego i walidacyjnego"""
-    weights = [0.15, 0.05, 0.1, 0.05, 0.05, 0.05, 0.08, 0.13, 0.17, 0.17]
+    weights = [0.18, 0.05, 0.14, 0.03, 0.03, 0.03, 0.03, 0.09, 0.21, 0.21]
     if reduced_dataset:
         values = [
             iou(actor1[1], actor2[1]),          # similarity ze względu na ilość wspólnych filmów
