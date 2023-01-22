@@ -206,8 +206,8 @@ def similarity_new(actor1: List[Any], actor2: List[Any], reduced_dataset: bool =
     jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1];
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
     danych na którym liczymy similarity ograniczamy do listy poniższych 6 kolumn:
-    ["nconst", "tconst", "titleType", "genres", "category", "primaryName", "knownForTitles",
-    "average_films_rating", "genres_code", "types_code"]
+    ["nconst", "tconst", "titleType", "genres", "category", "primaryName", "knownForTitles", "no_nominations_oscars_norm",
+    "no_nominations_globes_norm", "no_nominations_emmy_norm", "no_films_norm", "average_films_rating_norm", "genres_code", "types_code"]
     to należy zmienić wartość parametru 'reduced_dataset' na True;
     metoda jest przygotowana pod dane ze zbiorów treningowego, testowego i walidacyjnego"""
     weights = [0.15, 0.05, 0.1, 0.05, 0.05, 0.05, 0.08, 0.13, 0.17, 0.17]
@@ -249,8 +249,8 @@ def similarity_one_vs_all_new(data: pd.DataFrame, main_actor: List[Any], reduced
     funkcja similarity;
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
     danych na którym liczymy similarity ograniczamy do listy poniższych 6 kolumn:
-    ["nconst", "tconst", "titleType", "genres", "category", "primaryName", "knownForTitles",
-    "average_films_rating", "genres_code", "types_code"]
+    ["nconst", "tconst", "titleType", "genres", "category", "primaryName", "knownForTitles", "no_nominations_oscars_norm",
+    "no_nominations_globes_norm", "no_nominations_emmy_norm", "no_films_norm", "average_films_rating_norm", "genres_code", "types_code"]
     to należy zmienić wartość parametru 'reduced_dataset' na True"""
     actors = data.apply(prepare_pandas_row, axis=1)
     similarities = []
