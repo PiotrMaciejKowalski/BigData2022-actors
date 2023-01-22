@@ -2,7 +2,7 @@ import os
 import pyspark
 import findspark  # Czy na pewno potrzebny?
 from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.functions import collect_list, first, min, max, split, explode, when, col,  monotonically_increasing_id
+from pyspark.sql.functions import collect_list, first, min, max, split, explode, when, col,  monotonically_increasing_id, flatten
 from pyspark.sql.types import StructType, StringType, IntegerType, BooleanType, FloatType, TimestampType, DateType, ArrayType, MapType
 from typing import List, Tuple, Dict, Any
 import numpy
@@ -120,7 +120,7 @@ def load_data(spark: SparkSession) -> DataFrame:
           "isAdult",
           "startYear",
           "endYear",
-          "genres",
+          split(col("genres"),",").alias("genres"),
       ]
   )
   df_title_principals_selected = df_title_principals_selected.select(
@@ -164,6 +164,7 @@ def load_data(spark: SparkSession) -> DataFrame:
       first("primaryName").alias("primaryName"),
       first("knownForTitles").alias("knownForTitles"),
   )
+  data = data.withColumn("genres",flatten("genres"))
   return data
 
 
