@@ -5,3 +5,4 @@ DATA_WITH_ADDITIONAL_COLUMNS = f'{DATA_DIR}/data_with_additional_columns.parquet
 TRAIN_DATA = f'{DATA_DIR}/train_data.parquet'
 VALIDATE_DATA = f'{DATA_DIR}/validate_data.parquet'
 TEST_DATA = f'{DATA_DIR}/test_data.parquet'
+SIMILARITY_VALUES = f'{DATA_DIR}/SIMILARITY_VALUES.txt'
