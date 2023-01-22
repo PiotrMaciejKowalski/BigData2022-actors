@@ -194,12 +194,12 @@ def add_all_columns(spark: SparkSession, data: DataFrame) -> DataFrame:
     data = add_number_of_emmy_awards(data)
     data = add_number_of_films(data)
     data = add_average_films_ratings(spark, data).cache() # .cache() przyspieszy działanie kolejnej funkcji - dane po wykonaniu funkcji add_average_films_ratings są zapamiętywane i przechowywane, dzięki czemu przy kolejnej funkcji wszystkie wcześniejsze operacje nie muszą być wykonywane przy każdej komendzie wymagającej tych danych
-    data = add_normalized_columns(data)
-    data = genres_code(data)
-    data = types_code(data)
-    data = category_code(data)
     data = add_top0_genres(data)
     data = add_top_genres(data)
     data = add_top_type(data)
     data = add_top2_type(data)
+    data = add_normalized_columns(data)
+    data = genres_code(data)
+    data = types_code(data)
+    data = category_code(data)
     return data
