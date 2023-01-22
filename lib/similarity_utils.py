@@ -219,13 +219,13 @@ def similarity_new(actor1: List[Any], actor2: List[Any], reduced_dataset: bool =
             iou(actor1[1], actor2[1]),          # similarity ze względu na ilość wspólnych filmów
             1 if actor1[2] == actor2[2] else 0, # similarity ze względu na tę samą płeć
             iou(actor1[4], actor2[4]),          # similarity ze względu na wspólne produkcje z których są znani
-            1 - abs(actor1[5] - actor2[5]),    # similarity ze względu na ilość nominacji do oscarów
-            1 - abs(actor1[6] - actor2[6]),    # similarity ze względu na ilość nominacji do globów
-            1 - abs(actor1[7] - actor2[7]),    # similarity ze względu na ilość nominacji do emmy
-            1 - abs(actor1[8] - actor2[8]),   # similarity ze względu na ilość zagranych filmów
-            1 - abs(actor1[9] - actor2[9]),   # similarity ze względu na średnią ocenę filmów w których grali aktorzy
-            normalized_manhattan_distance(actor1[10], actor2[10]), # similarity ze względu na rodzaj granych produkcji
-            normalized_manhattan_distance(actor1[11], actor2[11])  # similarity ze względu na gatunek granych produkcji
+            1 - abs(actor1[5] - actor2[5]),     # similarity ze względu na ilość nominacji do oscarów
+            1 - abs(actor1[6] - actor2[6]),     # similarity ze względu na ilość nominacji do globów
+            1 - abs(actor1[7] - actor2[7]),     # similarity ze względu na ilość nominacji do emmy
+            1 - abs(actor1[8] - actor2[8]),     # similarity ze względu na ilość zagranych filmów
+            1 - abs(actor1[9] - actor2[9]),     # similarity ze względu na średnią ocenę filmów w których grali aktorzy
+            1 - normalized_manhattan_distance(actor1[10], actor2[10]), # similarity ze względu na rodzaj granych produkcji
+            1 - normalized_manhattan_distance(actor1[11], actor2[11])  # similarity ze względu na gatunek granych produkcji
         ]
     else:
         values = [
@@ -237,8 +237,8 @@ def similarity_new(actor1: List[Any], actor2: List[Any], reduced_dataset: bool =
             1 - abs(actor1[38] - actor2[38]),   # similarity ze względu na ilość nominacji do emmy
             1 - abs(actor1[40] - actor2[40]),   # similarity ze względu na ilość zagranych filmów
             1 - abs(actor1[41] - actor2[41]),   # similarity ze względu na średnią ocenę filmów w których grali aktorzy
-            normalized_manhattan_distance(actor1[42], actor2[42]), # similarity ze względu na rodzaj granych produkcji
-            normalized_manhattan_distance(actor1[43], actor2[43])  # similarity ze względu na gatunek granych produkcji
+            1 - normalized_manhattan_distance(actor1[42], actor2[42]), # similarity ze względu na rodzaj granych produkcji
+            1 - normalized_manhattan_distance(actor1[43], actor2[43])  # similarity ze względu na gatunek granych produkcji
         ]
     length = len(weights)
     assert length == len(values)
