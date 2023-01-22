@@ -65,8 +65,8 @@ def similarity(actor1: List[Any], actor2: List[Any], reduced_dataset: bool = Fal
     """metoda licząca similarity pomiędzy dwoma aktorami;
     jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1];
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
-    danych na którym liczymy similarity ograniczamy do poniższych 4 kolumn:
-    "nconst", "tconst", "titleType", "genres", "category"
+    danych na którym liczymy similarity ograniczamy do listy poniższych 6 kolumn:
+    ["nconst", "tconst", "titleType", "genres", "category", "primaryName"]
     to należy zmienić wartość parametru 'reduced_dataset' na True;
     metoda jest przygotowana pod dane ze zbioru JOINED_DATA"""
     weights = [0.3, 0.2, 0.3, 0.2]
@@ -95,8 +95,8 @@ def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any], reduced_dat
     każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzyskanej listy i main_actor przykładana jest
     funkcja similarity;
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
-    danych na którym liczymy similarity ograniczamy do poniższych 4 kolumn:
-    "nconst", "tconst", "titleType", "genres", "category"
+    danych na którym liczymy similarity ograniczamy do listy poniższych 6 kolumn:
+    ["nconst", "tconst", "titleType", "genres", "category", "primaryName"]
     to należy zmienić wartość parametru 'reduced_dataset' na True"""
     actors = data.apply(prepare_pandas_row, axis=1)
     similarities = []
@@ -116,10 +116,13 @@ def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5
         return ids[1:top_length + 1], values[1:top_length + 1]
 
 
-def replace_ids_with_names(data: pd.DataFrame, ids: List[str]) -> List[str]:
+def replace_ids_with_names(data: pd.DataFrame, ids: List[str], reduced_dataset: bool = False) -> List[str]:
     """metoda zamienia listę id aktorów, na listę ich imion;
     wartości odczytywane są na podstawie ramki danych data"""
-    return [find_actor(data, id)[10] for id in ids]
+    if reduced_dataset:
+        return [find_actor(data, id)[5] for id in ids]
+    else:
+        return [find_actor(data, id)[10] for id in ids]
 
 
 def print_top_similiar(main_actor: str, names: List[str], values: List[float]) -> None:
@@ -141,16 +144,20 @@ def get_ranking(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5,
 
 
 def insert_main_actor_column_values(data: pd.DataFrame, column_name: str, value: Any) -> pd.DataFrame:
-    """metoda do wskazanej rmaki danych dodaje kolumnę o nazwie column_name_main o wartościach wskazanych w argumencie value"""
+    """metoda do wskazanej ramki danych dodaje kolumnę o nazwie column_name_main o wartościach wskazanych w argumencie value"""
     for index, row in data.iterrows():
       data.at[index, column_name + "_main"] = value
     return data
 
 
 def similarity_pandas(row: pd.DataFrame) -> float:
-    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
-    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
-    funkcja similarity"""
+    """metoda została stworzona do testów! sugerowane jest używanie metody 'similarity'!
+
+    metoda liczy similarity pomiędzy dwoma aktorami znadjującymi się w tym samym wierszu;
+    aby dodać do wyciągniętego z załadowanych przez nas danych aktora (który jest podany jako pd.DataFrame) kolumn z wartościami aktora
+    względem którego będzie liczone similarity, należy użyć metody 'insert_main_actor_column_values' na poniższych kolumnach:
+    "tconst", "titleType", "genres", "category"
+    metoda nie tworzy tych kolumn automatycznie"""
     weights = [0.3, 0.2, 0.3, 0.2]
     values = [
         iou(list(row["tconst"]), list(row["tconst_main"])),  # similarity ze względu na ilość wspólnych filmów
@@ -165,7 +172,9 @@ def similarity_pandas(row: pd.DataFrame) -> float:
 
 
 def similarity_one_vs_all_pandas(data: pd.DataFrame, main_actor_values: pd.DataFrame) -> Tuple[List[str], List[float]]:
-    """metoda liczy similarity pomiędzy aktorem dla którego dane są dostarczone w postaci pandasowego wiersza, oraz
+    """metoda została stworzona do testów! sugerowane jest używanie metody 'similarity_one_vs_all'!
+
+    metoda liczy similarity pomiędzy aktorem dla którego dane są dostarczone w postaci pandasowego wiersza, oraz
     wszystkimi aktorami obecnymi w ramce danych data;
     w pojedynczym wierszu znajdują się informacje o jednym aktorze pierwotnie znajdującym się w wierszu, oraz obok tych
     danych doklejane są dane o aktorze względem którego liczone jest similarity;
@@ -179,4 +188,78 @@ def similarity_one_vs_all_pandas(data: pd.DataFrame, main_actor_values: pd.DataF
         data = insert_main_actor_column_values(data, column, main_actor_values[column])
     similarities = list(data.apply(similarity_pandas, axis=1))
     data.drop(columns = main_columns, axis=1)
+    return list(data["nconst"]), similarities
+
+
+def normalized_manhattan_distance(list1: List[float], list2: List[float]) -> float:
+    """metoda przyjmuje jako argumenty listy o wartościach liczbowych oraz zwraca liczbę która jest znormalizowaną (długością list)
+    odległość Manhattan pomiedzy podanymi dwoma listami"""
+    if not list1 or not list2:
+        return 0
+    else:
+        length = len(list1)
+        assert length == len(list2), "listy dla których liczona jest odległość są różnych długości"
+        distance = sum(abs(value1 - value2) for value1, value2 in zip(list1, list2))
+        return distance / length
+
+
+def similarity_new(actor1: List[Any], actor2: List[Any], reduced_dataset: bool = False) -> float:
+    """metoda licząca similarity pomiędzy dwoma aktorami;
+    jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1];
+    parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
+    danych na którym liczymy similarity ograniczamy do listy poniższych 12 kolumn:
+    
+    ["nconst", "tconst", "category", "primaryName", "knownForTitles", "no_nominations_oscars_norm", "no_nominations_globes_norm",
+    "no_nominations_emmy_norm", "no_films_norm", "average_films_rating_norm", "genres_code", "types_code"]
+    
+    to należy zmienić wartość parametru 'reduced_dataset' na True;
+    metoda jest przygotowana pod dane ze zbiorów treningowego, testowego i walidacyjnego"""
+    weights = [0.15, 0.05, 0.1, 0.05, 0.05, 0.05, 0.08, 0.13, 0.17, 0.17]
+    if reduced_dataset:
+        values = [
+            iou(actor1[1], actor2[1]),          # similarity ze względu na ilość wspólnych filmów
+            1 if actor1[2] == actor2[2] else 0, # similarity ze względu na tę samą płeć
+            iou(actor1[4], actor2[4]),          # similarity ze względu na wspólne produkcje z których są znani
+            1 - abs(actor1[5] - actor2[5]),    # similarity ze względu na ilość nominacji do oscarów
+            1 - abs(actor1[6] - actor2[6]),    # similarity ze względu na ilość nominacji do globów
+            1 - abs(actor1[7] - actor2[7]),    # similarity ze względu na ilość nominacji do emmy
+            1 - abs(actor1[8] - actor2[8]),   # similarity ze względu na ilość zagranych filmów
+            1 - abs(actor1[9] - actor2[9]),   # similarity ze względu na średnią ocenę filmów w których grali aktorzy
+            normalized_manhattan_distance(actor1[10], actor2[10]), # similarity ze względu na rodzaj granych produkcji
+            normalized_manhattan_distance(actor1[11], actor2[11])  # similarity ze względu na gatunek granych produkcji
+        ]
+    else:
+        values = [
+            iou(actor1[1], actor2[1]),          # similarity ze względu na ilość wspólnych filmów
+            1 if actor1[8] == actor2[8] else 0, # similarity ze względu na tę samą płeć
+            iou(actor1[11], actor2[11]),        # silarity ze względu na wspólne produkcje z których są znani
+            1 - abs(actor1[34] - actor2[34]),   # similarity ze względu na ilość nominacji do oscarów
+            1 - abs(actor1[36] - actor2[36]),   # similarity ze względu na ilość nominacji do globów
+            1 - abs(actor1[38] - actor2[38]),   # similarity ze względu na ilość nominacji do emmy
+            1 - abs(actor1[40] - actor2[40]),   # similarity ze względu na ilość zagranych filmów
+            1 - abs(actor1[41] - actor2[41]),   # similarity ze względu na średnią ocenę filmów w których grali aktorzy
+            normalized_manhattan_distance(actor1[42], actor2[42]), # similarity ze względu na rodzaj granych produkcji
+            normalized_manhattan_distance(actor1[43], actor2[43])  # similarity ze względu na gatunek granych produkcji
+        ]
+    length = len(weights)
+    assert length == len(values)
+    # TODO dodać linijkę uwzględniającą kolumnę knownForTitles za pomocą metody iou
+    return sum(weights[i] * values[i] for i in range(length)) * 2 - 1
+
+
+def similarity_one_vs_all_new(data: pd.DataFrame, main_actor: List[Any], reduced_dataset: bool = False) -> Tuple[List[str], List[float]]:
+    """metoda liczy similarity pomiędzy aktorem main_actor podanym jako lista wartości, a wszystkimi aktorami obecnymi w ramce danych data;
+    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzyskanej listy i main_actor przykładana jest
+    funkcja similarity;
+    parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
+    danych na którym liczymy similarity ograniczamy do listy poniższych 12 kolumn:
+
+    ["nconst", "tconst", "category", "primaryName", "knownForTitles", "no_nominations_oscars_norm", "no_nominations_globes_norm",
+    "no_nominations_emmy_norm", "no_films_norm", "average_films_rating_norm", "genres_code", "types_code"]
+    
+    to należy zmienić wartość parametru 'reduced_dataset' na True"""
+    actors = data.apply(prepare_pandas_row, axis=1)
+    similarities = []
+    for actor in actors:
+        similarities.append(similarity_new(main_actor, actor, reduced_dataset))
     return list(data["nconst"]), similarities
