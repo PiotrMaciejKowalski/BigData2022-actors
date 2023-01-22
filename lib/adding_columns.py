@@ -123,6 +123,7 @@ def add_normalized_columns(data: DataFrame) -> DataFrame:
         normalized_column = Normalized_column(inputCol = i)
         pipeline = Pipeline(stages=[assembler, scaler, normalized_column])
         data = pipeline.fit(data).transform(data)
+    return data
         
 def genres_code(data: DataFrame) -> DataFrame:
     assert "genres_code" not in data.columns
