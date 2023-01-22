@@ -65,8 +65,8 @@ def similarity(actor1: List[Any], actor2: List[Any], reduced_dataset: bool = Fal
     """metoda licząca similarity pomiędzy dwoma aktorami;
     jej argumentami są dwie listy, a wartością wyjściową wartość z przedziału [-1, 1];
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
-    danych na którym liczymy similarity ograniczamy do poniższych 5 kolumn:
-    "nconst", "tconst", "titleType", "genres", "category"
+    danych na którym liczymy similarity ograniczamy do listy poniższych 6 kolumn:
+    ["nconst", "tconst", "titleType", "genres", "category", "primaryName"]
     to należy zmienić wartość parametru 'reduced_dataset' na True;
     metoda jest przygotowana pod dane ze zbioru JOINED_DATA"""
     weights = [0.3, 0.2, 0.3, 0.2]
@@ -95,8 +95,8 @@ def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any], reduced_dat
     każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzyskanej listy i main_actor przykładana jest
     funkcja similarity;
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
-    danych na którym liczymy similarity ograniczamy do poniższych 5 kolumn:
-    "nconst", "tconst", "titleType", "genres", "category"
+    danych na którym liczymy similarity ograniczamy do listy poniższych 6 kolumn:
+    ["nconst", "tconst", "titleType", "genres", "category", "primaryName"]
     to należy zmienić wartość parametru 'reduced_dataset' na True"""
     actors = data.apply(prepare_pandas_row, axis=1)
     similarities = []
@@ -116,10 +116,13 @@ def select_top_similiar(ids: List[str], values: List[float], top_length: int = 5
         return ids[1:top_length + 1], values[1:top_length + 1]
 
 
-def replace_ids_with_names(data: pd.DataFrame, ids: List[str]) -> List[str]:
+def replace_ids_with_names(data: pd.DataFrame, ids: List[str], reduced_dataset: bool = False) -> List[str]:
     """metoda zamienia listę id aktorów, na listę ich imion;
     wartości odczytywane są na podstawie ramki danych data"""
-    return [find_actor(data, id)[10] for id in ids]
+    if reduced_dataset:
+        return [find_actor(data, id)[5] for id in ids]
+    else:
+        return [find_actor(data, id)[10] for id in ids]
 
 
 def print_top_similiar(main_actor: str, names: List[str], values: List[float]) -> None:
