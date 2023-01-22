@@ -1,7 +1,5 @@
 from google.colab import drive
 drive.mount('/content/gdrive')
-
-spark = create_spark_context()
      
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 import requests
