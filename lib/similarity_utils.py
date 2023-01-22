@@ -151,7 +151,7 @@ def insert_main_actor_column_values(data: pd.DataFrame, column_name: str, value:
 
 
 def similarity_pandas(row: pd.DataFrame) -> float:
-    """metoda została swtorzona do testów! sugerowane jest używanie metody 'similarity'!
+    """metoda została stworzona do testów! sugerowane jest używanie metody 'similarity'!
 
     metoda liczy similarity pomiędzy dwoma aktorami znadjującymi się w tym samym wierszu;
     aby dodać do wyciągniętego z załadowanych przez nas danych aktora (który jest podany jako pd.DataFrame) kolumn z wartościami aktora
@@ -172,7 +172,7 @@ def similarity_pandas(row: pd.DataFrame) -> float:
 
 
 def similarity_one_vs_all_pandas(data: pd.DataFrame, main_actor_values: pd.DataFrame) -> Tuple[List[str], List[float]]:
-    """metoda została swtorzona do testów! sugerowane jest używanie metody 'similarity_one_vs_all'!
+    """metoda została stworzona do testów! sugerowane jest używanie metody 'similarity_one_vs_all'!
 
     metoda liczy similarity pomiędzy aktorem dla którego dane są dostarczone w postaci pandasowego wiersza, oraz
     wszystkimi aktorami obecnymi w ramce danych data;
@@ -213,29 +213,29 @@ def similarity_new(actor1: List[Any], actor2: List[Any], reduced_dataset: bool =
     weights = [0.15, 0.05, 0.1, 0.05, 0.05, 0.05, 0.08, 0.13, 0.17, 0.17]
     if reduced_dataset:
         values = [
-            iou(actor1[1], actor2[1]),  # similarity ze względu na ilość wspólnych filmów
-            1 if actor1[4] == actor2[4] else 0,  # similarity ze względu na tę samą płeć
-            iou(actor1[6], actor2[6]),  # similarity ze względu na wspólne produkcje z których są znani
-            1 - abs(actor1[7] - actor2[34]),  # similarity ze względu na ilość nominacji do oscarów
-            1 - abs(actor1[8] - actor2[36]),  # similarity ze względu na ilość nominacji do globów
-            1 - abs(actor1[9] - actor2[38]),  # similarity ze względu na ilość nominacji do emmy
-            1 - abs(actor1[10] - actor2[10]),  # similarity ze względu na ilość zagranych filmów
-            1 - abs(actor1[11] - actor2[11]),  # similarity ze względu na średnią ocenę filmów            
-            iou(actor1[8], actor2[8]),  # similarity ze względu na rodzaj granych produkcji
-            iou(actor1[9], actor2[9])  # similarity ze względu na gatunek granych produkcji
+            iou(actor1[1], actor2[1]),          # similarity ze względu na ilość wspólnych filmów
+            1 if actor1[4] == actor2[4] else 0, # similarity ze względu na tę samą płeć
+            iou(actor1[6], actor2[6]),          # similarity ze względu na wspólne produkcje z których są znani
+            1 - abs(actor1[7] - actor2[34]),    # similarity ze względu na ilość nominacji do oscarów
+            1 - abs(actor1[8] - actor2[36]),    # similarity ze względu na ilość nominacji do globów
+            1 - abs(actor1[9] - actor2[38]),    # similarity ze względu na ilość nominacji do emmy
+            1 - abs(actor1[10] - actor2[10]),   # similarity ze względu na ilość zagranych filmów
+            1 - abs(actor1[11] - actor2[11]),   # similarity ze względu na średnią ocenę filmów w których grali aktorzy
+            normalized_manhattan_distance(actor1[8], actor2[8]), # similarity ze względu na rodzaj granych produkcji
+            normalized_manhattan_distance(actor1[9], actor2[9])  # similarity ze względu na gatunek granych produkcji
         ]
     else:
         values = [
-            iou(actor1[1], actor2[1]),  # similarity ze względu na ilość wspólnych filmów
-            1 if actor1[8] == actor2[8] else 0,  # similarity ze względu na tę samą płeć
-            iou(actor1[11], actor2[11]),  # similarity ze względu na wspólne produkcje z których są znani
-            1 - abs(actor1[34] - actor2[34]),  # similarity ze względu na ilość nominacji do oscarów
-            1 - abs(actor1[36] - actor2[36]),  # similarity ze względu na ilość nominacji do globów
-            1 - abs(actor1[38] - actor2[38]),  # similarity ze względu na ilość nominacji do emmy
-            1 - abs(actor1[40] - actor2[40]),  # similarity ze względu na ilość zagranych filmów
-            1 - abs(actor1[41] - actor2[41]),  # similarity ze względu na średnią ocenę filmów
-            iou(actor1[42], actor2[42]),  # similarity ze względu na wspólne produkcje z których są znani
-            iou(actor1[43], actor2[43])  # similarity ze względu na wspólne produkcje z których są znani
+            iou(actor1[1], actor2[1]),          # similarity ze względu na ilość wspólnych filmów
+            1 if actor1[8] == actor2[8] else 0, # similarity ze względu na tę samą płeć
+            iou(actor1[11], actor2[11]),        # silarity ze względu na wspólne produkcje z których są znani
+            1 - abs(actor1[34] - actor2[34]),   # similarity ze względu na ilość nominacji do oscarów
+            1 - abs(actor1[36] - actor2[36]),   # similarity ze względu na ilość nominacji do globów
+            1 - abs(actor1[38] - actor2[38]),   # similarity ze względu na ilość nominacji do emmy
+            1 - abs(actor1[40] - actor2[40]),   # similarity ze względu na ilość zagranych filmów
+            1 - abs(actor1[41] - actor2[41]),   # similarity ze względu na średnią ocenę filmów w których grali aktorzy
+            normalized_manhattan_distance(actor1[42], actor2[42]), # similarity ze względu na rodzaj granych produkcji
+            normalized_manhattan_distance(actor1[43], actor2[43])  # similarity ze względu na gatunek granych produkcji
         ]
     length = len(weights)
     assert length == len(values)
