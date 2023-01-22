@@ -91,13 +91,13 @@ def similarity(actor1: List[Any], actor2: List[Any], reduced_dataset: bool = Fal
 
 
 def similarity_one_vs_all(data: pd.DataFrame, main_actor: List[Any], reduced_dataset: bool = False) -> Tuple[List[str], List[float]]:
-    """metoda liczy similarity pomiędzy aktorem main_actor, a wszystkimi aktorami obecnymi w ramce danych data;
-    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzsykanej listy i main_actor przykładana jest
-    funkcja similarity
+    """metoda liczy similarity pomiędzy aktorem main_actor podanym jako lista wartości, a wszystkimi aktorami obecnymi w ramce danych data;
+    każdy wiersz ramki jest zamieniany na listę, a nastepnie do uzyskanej listy i main_actor przykładana jest
+    funkcja similarity;
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
     danych na którym liczymy similarity ograniczamy do poniższych 4 kolumn:
     "nconst", "tconst", "titleType", "genres", "category"
-    to należy zmienić wartość parametru 'reduced_dataset' na True;"""
+    to należy zmienić wartość parametru 'reduced_dataset' na True"""
     actors = data.apply(prepare_pandas_row, axis=1)
     similarities = []
     for actor in actors:
