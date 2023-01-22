@@ -114,7 +114,7 @@ class Normalized_column(Transformer):
     def _transform(self, data):
         unlist = udf(lambda x: round(float(list(x)[0]),3), DoubleType()) # zamiana typu wartości w kolumnie z wektora na Double
         return data.withColumn(self.inputCol + "_norm", unlist(self.inputCol + "_norm")).drop(self.inputCol + "_Vect")
-
+    
 def add_normalized_columns(data: DataFrame) -> DataFrame:
     assert (x not in data.columns for x in ["no_nominations_oscars_norm", "no_oscars_norm", "no_nominations_globes_norm", "no_globes_norm", "no_nominations_emmy_norm", "no_emmy_norm", "no_films_norm", "average_films_rating_norm"])
     to_be_normalized = ["no_nominations_oscars", "no_oscars", "no_nominations_globes", "no_globes", "no_nominations_emmy", "no_emmy", "no_films", "average_films_rating"]
@@ -166,7 +166,7 @@ def add_top2_type(data: DataFrame) -> DataFrame:
         df3 = df2.select('nconst', explode(split(df2.titleType, ',')).alias('titleType'))
         w = Window.partitionBy('nconst', 'titleType')
         aggregated_table = df3.withColumn("count", count("*").over(w)).withColumn(
-            "rn", row_number().over(w.orderBy(desc("count")))).filter("rn = 2").groupBy('nconst').agg(first('titleType').alias('top_type'))
+            "rn", row_number().over(w.orderBy(desc("count")))).filter("rn = 2").groupBy('nconst').agg(first('titleType').alias('top_type2'))
         data = data.join(aggregated_table, on="nconst", how="left")
         return data
     
@@ -184,7 +184,7 @@ def add_top0_genres(data: DataFrame) -> DataFrame:
         df5 = df4.select('nconst', explode(split(df4.genres, ',')).alias('genres'))
         w_2 = Window.partitionBy('nconst', 'genres')
         aggregated_table_2 = df5.withColumn("count", count("*").over(w_2)).withColumn(
-            "rn", row_number().over(w_2.orderBy(desc("count")))).filter("rn = 0").groupBy('nconst').agg(first('genres').alias('top_genres'))
+            "rn", row_number().over(w_2.orderBy(desc("count")))).filter("rn = 0").groupBy('nconst').agg(first('genres').alias('top_genres_0'))
         data = data.join(aggregated_table_2, on="nconst", how="left")
         return data
     
