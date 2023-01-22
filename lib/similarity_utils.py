@@ -132,11 +132,11 @@ def print_top_similiar(main_actor: str, names: List[str], values: List[float]) -
         print(f'  - {names[i]} z similarity równym: {round(values[i], 3)}')
 
 
-def get_ranking(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5) -> List[str]:
+def get_ranking(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5, reduced_dataset: bool = False) -> List[str]:
     """metoda dla ramki danych, id aktora oraz (opcjonalnie) długości rankingu, zwraca listę id aktorów najbardziej
     podobnych do wybranego aktora"""
     main_actor = prepare_pandas_row(find_actor(data, main_actor_id))
-    ids, similarities = similarity_one_vs_all(data, main_actor)
+    ids, similarities = similarity_one_vs_all(data, main_actor, reduced_dataset)
     return select_top_similiar(ids, similarities, ranking_length)[0]
 
 
