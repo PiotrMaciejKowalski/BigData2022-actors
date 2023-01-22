@@ -2,9 +2,10 @@ from pandas import DataFrame
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.ml import Pipeline
 from pyspark.ml.pipeline import Transformer
-from pyspark.ml.feature import MinMaxScaler, VectorAssembler
+from pyspark.ml.feature import MinMaxScaler, VectorAssembler, StringIndexer
+from pyspark.ml.util import Identifiable
 from pyspark.sql.types import DoubleType
-from pyspark.sql.functions import explode, col, count, avg, udf
+from pyspark.sql.functions import explode, col, count, avg, udf, array_contains, array
 
 from lib.pyspark_init import load_ratings_data
 
