@@ -1,6 +1,19 @@
+from google.colab import drive
+drive.mount('/content/gdrive')
+
+!chmod +x setup_sparka.sh
+!./setup_sparka.sh   
 !pip install requests
+
+spark = create_spark_context()
+
+#!git checkout pobieranie_zdjęć
+     
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 import requests
+import numpy as np
 import cv2
+from lib.pyspark_init import create_spark_context
 
 #wczytuje obrazy i zapisuje w katalogu o sciezce c_path
 def save_download(url, file_name, c_path):
