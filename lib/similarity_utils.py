@@ -256,9 +256,19 @@ def similarity_one_vs_all_new(data: pd.DataFrame, main_actor: List[Any], reduced
     ["nconst", "tconst", "category", "primaryName", "knownForTitles", "no_nominations_oscars_norm", "no_nominations_globes_norm",
     "no_nominations_emmy_norm", "no_films_norm", "average_films_rating_norm", "genres_code", "types_code"]
     
-    to należy zmienić wartość parametru 'reduced_dataset' na True"""
+    to należy zmienić wartość parametru 'reduced_dataset' na True;
+    metoda jest przygotowana pod dane ze zbiorów treningowego, testowego i walidacyjnego"""
     actors = data.apply(prepare_pandas_row, axis=1)
     similarities = []
     for actor in actors:
         similarities.append(similarity_new(main_actor, actor, reduced_dataset))
     return list(data["nconst"]), similarities
+
+
+def get_ranking_new(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5, reduced_dataset: bool = False) -> List[str]:
+    """metoda dla ramki danych, id aktora oraz (opcjonalnie) długości rankingu, zwraca listę id aktorów najbardziej
+    podobnych do wybranego aktora;
+    metoda jest przygotowana pod dane ze zbiorów treningowego, testowego i walidacyjnego"""
+    main_actor = prepare_pandas_row(find_actor(data, main_actor_id))
+    ids, similarities = similarity_one_vs_all_new(data, main_actor, reduced_dataset)
+    return select_top_similiar(ids, similarities, ranking_length)[0]
