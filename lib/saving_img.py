@@ -1,14 +1,3 @@
-from google.colab import drive
-drive.mount('/content/gdrive')
-
-!chmod +x setup_sparka.sh
-!./setup_sparka.sh   
-!pip install requests
-
-spark = create_spark_context()
-
-#!git checkout pobieranie_zdjęć
-     
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 import requests
 import numpy as np
