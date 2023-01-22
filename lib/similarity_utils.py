@@ -213,7 +213,7 @@ def similarity_new(actor1: List[Any], actor2: List[Any], reduced_dataset: bool =
     
     to należy zmienić wartość parametru 'reduced_dataset' na True;
     metoda jest przygotowana pod dane ze zbiorów treningowego, testowego i walidacyjnego"""
-    weights = [0.18, 0.05, 0.14, 0.03, 0.03, 0.03, 0.03, 0.09, 0.21, 0.21]
+    weights = [0.2, 0.03, 0.13, 0.03, 0.03, 0.03, 0.12, 0.13, 0.15, 0.15]
     if reduced_dataset:
         values = [
             iou(actor1[1], actor2[1]),          # similarity ze względu na ilość wspólnych filmów
