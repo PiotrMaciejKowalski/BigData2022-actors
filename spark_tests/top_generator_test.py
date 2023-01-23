@@ -13,7 +13,7 @@ def test_add_top_generes():
             (1, ["Drama", "Action", "Drama", "Comedy", "Action", "Action"]),
             (2, ["Drama", "Drama", "Drama", "Comedy", "Action", "Comedy", "Romance"]),
         ],
-        "id int, generes List[str]",
+        ["nconst", "genres"],
     )
 
     df = add_top_genres(df)
