@@ -1,6 +1,7 @@
 from typing import List, Any, Tuple
 import pandas as pd
 import numpy
+from IPython.display import display
 
 
 def pokrycie_przedzialow(przedzial1: List[int], przedzial2: List[int]) -> float:
@@ -262,3 +263,17 @@ def similarity_one_vs_all_new(data: pd.DataFrame, main_actor: List[Any], reduced
     for actor in actors:
         similarities.append(similarity_new(main_actor, actor, reduced_dataset))
     return list(data["nconst"]), similarities
+
+def get_actor_data(train_data: pd.DataFrame, validate_data: pd.DataFrame, actor_id: str) -> List[Any]:
+    """metoda wyciąga wiersz z podanych danych (treningowych i walidacyjnych) dla aktora o podanym id; 
+    tworzy listę gotową do użycia do funkcji liczących similarity i wyświetla ją w tabeli"""
+    if actor_id in list(train_data['nconst']):
+        actor1_data = find_actor(train_data,  actor_id)
+        display(pd.DataFrame(actor1_data))
+        return prepare_pandas_row(actor1_data)
+    elif actor_id in list(validate_data['nconst']):
+        actor1_data = find_actor(validate_data,  actor_id)
+        display(pd.DataFrame(actor1_data))
+        return prepare_pandas_row(actor1_data)
+    else:
+        return "Aktora nie ma w danych treningowych i walidacyjnych. Wybierz innego aktora."
