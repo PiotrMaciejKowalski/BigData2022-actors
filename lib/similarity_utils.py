@@ -1,6 +1,7 @@
 from typing import List, Any, Tuple
 import pandas as pd
 import numpy
+from IPython.display import display
 
 
 def pokrycie_przedzialow(przedzial1: List[int], przedzial2: List[int]) -> float:
@@ -272,3 +273,19 @@ def get_ranking_new(data: pd.DataFrame, main_actor_id: str, ranking_length: int 
     main_actor = prepare_pandas_row(find_actor(data, main_actor_id))
     ids, similarities = similarity_one_vs_all_new(data, main_actor, reduced_dataset)
     return select_top_similiar(ids, similarities, ranking_length)[0]
+    
+
+def find_actor_two_datasets(data1: pd.DataFrame, data2: pd.DataFrame, actor_id: str) -> List[Any]:
+    """metoda wyciąga wiersz z podanych dwóch zbiorów danych dla aktora o podanym id; 
+    tworzy listę gotową do użycia do funkcji liczących similarity i wyświetla ją w tabeli"""
+    if actor_id in list(data1['nconst']):
+        actor_data = find_actor(data1,  actor_id)
+        display(pd.DataFrame(actor_data))
+        return prepare_pandas_row(actor_data)
+    elif actor_id in list(data2['nconst']):
+        actor_data = find_actor(data2,  actor_id)
+        display(pd.DataFrame(actor_data))
+        return prepare_pandas_row(actor_data)
+    else:
+        print("W żadnym z tych dwóch zbiorów nie ma wybranego aktora")
+        return None
