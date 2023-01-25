@@ -153,6 +153,7 @@ def insert_main_actor_column_values(data: pd.DataFrame, column_name: str, value:
 
 def similarity_pandas(row: pd.DataFrame) -> float:
     """metoda została stworzona do testów! sugerowane jest używanie metody 'similarity'!
+
     metoda liczy similarity pomiędzy dwoma aktorami znadjującymi się w tym samym wierszu;
     aby dodać do wyciągniętego z załadowanych przez nas danych aktora (który jest podany jako pd.DataFrame) kolumn z wartościami aktora
     względem którego będzie liczone similarity, należy użyć metody 'insert_main_actor_column_values' na poniższych kolumnach:
@@ -173,6 +174,7 @@ def similarity_pandas(row: pd.DataFrame) -> float:
 
 def similarity_one_vs_all_pandas(data: pd.DataFrame, main_actor_values: pd.DataFrame) -> Tuple[List[str], List[float]]:
     """metoda została stworzona do testów! sugerowane jest używanie metody 'similarity_one_vs_all'!
+
     metoda liczy similarity pomiędzy aktorem dla którego dane są dostarczone w postaci pandasowego wiersza, oraz
     wszystkimi aktorami obecnymi w ramce danych data;
     w pojedynczym wierszu znajdują się informacje o jednym aktorze pierwotnie znajdującym się w wierszu, oraz obok tych
@@ -252,6 +254,7 @@ def similarity_one_vs_all_new(data: pd.DataFrame, main_actor: List[Any], reduced
     funkcja similarity;
     parametr 'reduced_dataset' domyślnie ustawiony jest na False, jednak w przypadku gdy zbiór 
     danych na którym liczymy similarity ograniczamy do listy poniższych 12 kolumn:
+
     ["nconst", "tconst", "category", "primaryName", "knownForTitles", "no_nominations_oscars_norm", "no_nominations_globes_norm",
     "no_nominations_emmy_norm", "no_films_norm", "average_films_rating_norm", "genres_code", "types_code"]
     
