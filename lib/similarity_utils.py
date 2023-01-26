@@ -138,6 +138,7 @@ def print_top_similiar(main_actor: str, names: List[str], values: List[float]) -
 def get_ranking(data: pd.DataFrame, main_actor_id: str, ranking_length: int = 5, reduced_dataset: bool = False) -> List[str]:
     """metoda dla ramki danych, id aktora oraz (opcjonalnie) długości rankingu, zwraca listę id aktorów najbardziej
     podobnych do wybranego aktora"""
+    warnings.warn("Jest nowa funkcja get_ranking_for_actor_data_row")
     main_actor = prepare_pandas_row(find_actor(data, main_actor_id))
     ids, similarities = similarity_one_vs_all(data, main_actor, reduced_dataset)
     return select_top_similiar(ids, similarities, ranking_length)[0]
@@ -270,6 +271,7 @@ def get_ranking_new(data: pd.DataFrame, main_actor_id: str, ranking_length: int 
     """metoda dla ramki danych, id aktora oraz (opcjonalnie) długości rankingu, zwraca listę id aktorów najbardziej
     podobnych do wybranego aktora;
     metoda jest przygotowana pod dane ze zbiorów treningowego, testowego i walidacyjnego"""
+    warnings.warn("Jest nowa funkcja get_ranking_for_actor_data_row_new")
     main_actor = prepare_pandas_row(find_actor(data, main_actor_id))
     ids, similarities = similarity_one_vs_all_new(data, main_actor, reduced_dataset)
     return select_top_similiar(ids, similarities, ranking_length)[0]
@@ -289,3 +291,19 @@ def find_actor_two_datasets(data1: pd.DataFrame, data2: pd.DataFrame, actor_id: 
     else:
         print("W żadnym z tych dwóch zbiorów nie ma wybranego aktora")
         return None
+
+
+def get_ranking_for_actor_data_row(ranking_data_source: pd.DataFrame, actor_pandas_row: pd.DataFrame, ranking_length: int = 5, reduced_dataset: bool = False) -> List[str]:
+    """metoda dla ramki danych, wiersza wybranego aktora oraz (opcjonalnie) długości rankingu, zwraca listę id aktorów najbardziej
+    podobnych do wybranego aktora"""
+    actor_data_row = prepare_pandas_row(actor_pandas_row)
+    ids, similarities = similarity_one_vs_all(ranking_data_source, actor_data_row, reduced_dataset)
+    return select_top_similiar(ids, similarities, ranking_length)[0]
+
+
+def get_ranking_for_actor_data_row_new(ranking_data_source: pd.DataFrame, actor_pandas_row: pd.DataFrame, ranking_length: int = 5, reduced_dataset: bool = False) -> List[str]:
+    """metoda dla ramki danych, wiersza wybranego aktora oraz (opcjonalnie) długości rankingu, zwraca listę id aktorów najbardziej
+    podobnych do wybranego aktora"""
+    actor_data_row= prepare_pandas_row(actor_pandas_row)
+    ids, similarities = similarity_one_vs_all_new(ranking_data_source, actor_data_row, reduced_dataset)
+    return select_top_similiar(ids, similarities, ranking_length)[0]
